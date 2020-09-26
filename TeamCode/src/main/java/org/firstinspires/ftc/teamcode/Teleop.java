@@ -62,10 +62,11 @@ public class Teleop extends LinearOpMode{
             bl = (bl / max) * magnitude;
             br = (br / max) * magnitude;
         }
-        System.out.println("fl: " + fl);
-        System.out.println("fr: " + fr);
-        System.out.println("bl: " + bl);
-        System.out.println("br " + br);
+        telemetry.addData("fl: ", fl);
+        telemetry.addData("fr: ", fr);
+        telemetry.addData("bl: ", bl);
+        telemetry.addData("br ", br);
+        telemetry.update();
 
         fL.setPower(fl);
         fR.setPower(fr);
@@ -101,10 +102,11 @@ public class Teleop extends LinearOpMode{
             bl = (bl / max) * magnitude;
             br = (br / max) * magnitude;
         }
-        System.out.println("fl: " + fl);
-        System.out.println("fr: " + fr);
-        System.out.println("bl: " + bl);
-        System.out.println("br " + br);
+        telemetry.addData("fl: ", fl);
+        telemetry.addData("fr: ", fr);
+        telemetry.addData("bl: ", bl);
+        telemetry.addData("br ", br);
+        telemetry.update();
 
         fL.setPower(fl);
         fR.setPower(fr);
