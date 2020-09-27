@@ -29,6 +29,11 @@ public class Teleop extends LinearOpMode{
         bL = hardwareMap.get(DcMotor.class, "bL");
         bR = hardwareMap.get(DcMotor.class, "bR");
 
+        fR.setDirection(DcMotor.Direction.FORWARD);
+        fL.setDirection(DcMotor.Direction.REVERSE);
+        bR.setDirection(DcMotor.Direction.FORWARD);
+        bL.setDirection(DcMotor.Direction.REVERSE);
+
         gyro = new Sensors(this);
     }
 
@@ -74,7 +79,7 @@ public class Teleop extends LinearOpMode{
         bR.setPower(br);
     }
 
-    public void robotCentricMecanum(double x, double y, double turn, double robotHeadingRad){
+    public void robotCentricTrigMecanum(double x, double y, double turn){
         Vector movement = new Vector(x, y);
         double rightX = turn;
 
@@ -94,6 +99,41 @@ public class Teleop extends LinearOpMode{
             max = Math.max(Math.abs(fr), max);
             max = Math.max(Math.abs(bl), max);
 
+            //Divide everything by max (it's positive so we don't need to worry
+            //about signs)
+            //multiply by input magnitude as it represents true speed (from 0-1) that we want robot to move at
+            fl = (fl / max) * magnitude;
+            fr = (fr / max) * magnitude;
+            bl = (bl / max) * magnitude;
+            br = (br / max) * magnitude;
+        }
+        telemetry.addData("fl: ", fl);
+        telemetry.addData("fr: ", fr);
+        telemetry.addData("bl: ", bl);
+        telemetry.addData("br ", br);
+        telemetry.update();
+
+        fL.setPower(fl);
+        fR.setPower(fr);
+        bL.setPower(bl);
+        bR.setPower(br);
+    }
+
+    public void robotCentricAdditiveMecanum(double x, double y, double turn){
+        double magnitude = Math.hypot(x, y);
+
+        double fl = y + turn + x;
+        double fr = y - turn - x;
+        double bl = y + turn - x;
+        double br = y - turn + x;
+
+        double max = 0;
+        max = Math.max(Math.abs(fl), Math.abs(br));
+        max = Math.max(Math.abs(fr), max);
+        max = Math.max(Math.abs(bl), max);
+
+        //only normalize if mag isnt 0 because if it is, we want to turn and will always be from 0-1
+        if (magnitude != 0) {
             //Divide everything by max (it's positive so we don't need to worry
             //about signs)
             //multiply by input magnitude as it represents true speed (from 0-1) that we want robot to move at
