@@ -68,7 +68,7 @@ public class Vision {
     //checks 1 row if pixels that should be in the area where the top ring is
     //checks 80 pixels, and if 40 are yellow, it returns true
     public boolean yellowInTop() throws InterruptedException {
-        final int topY = 365;
+        final int topY = 350;
         final int topXLeft = 380, topXRight = 610;
         int numYellow = 0;
 
