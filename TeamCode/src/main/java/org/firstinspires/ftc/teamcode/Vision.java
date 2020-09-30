@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
+import static android.graphics.Color.blue;
 import static android.graphics.Color.green;
 import static android.graphics.Color.red;
 
@@ -53,6 +54,14 @@ public class Vision {
         opMode.telemetry.update();
 
         bitmap = bm;
+    }
+
+    public void displayColor(int x, int y){
+        int pixel = bitmap.getPixel(x, y);
+        opMode.telemetry.addData("RED: ", red(pixel));
+        opMode.telemetry.addData("BLUE: ", blue(pixel));
+        opMode.telemetry.addData("GREEN: ", green(pixel));
+        opMode.telemetry.update();
     }
 
     //yellow RGB value is 255, 255, 0

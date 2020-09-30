@@ -11,8 +11,9 @@ public class VisionTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         ringCounter = new Vision(this);
         while(!isStopRequested()){
-            int numRings = ringCounter.numRings();
-            telemetry.addData("num rings: ", numRings);
+            //int numRings = ringCounter.numRings();
+            //telemetry.addData("num rings: ", numRings);
+            ringCounter.displayColor(495, 365);
         }
     }
 }
