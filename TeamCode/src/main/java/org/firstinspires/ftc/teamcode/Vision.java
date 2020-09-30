@@ -66,39 +66,39 @@ public class Vision {
 
     //yellow RGB value is 255, 255, 0
     //checks 1 row if pixels that should be in the area where the top ring is
-    //checks 80 pixels, and if 40 are yellow, it returns true
+    //checks 230 pixels, and if 150 are yellow, it returns true
     public boolean yellowInTop() throws InterruptedException {
         final int topY = 350;
-        final int topXLeft = 380, topXRight = 610;
+        final int topXLeft = 380, topXRight = 610; //230 total pixels
         int numYellow = 0;
 
         for(int x = topXLeft; x < topXRight; x++){
             int pixel = bitmap.getPixel(x, topY);
-            if (red(pixel) > 200 && green(pixel) > 200){
+            if (isYellow(pixel)){
                 numYellow++;
             }
         }
-        return (numYellow > 50);
+        return (numYellow > 150);
     }
 
     //checks 1 row if pixels that should be in the area where the bottom ring is
-    //checks 80 pixels, and if 40 are yellow, it returns true
+    //checks 230 pixels, and if 150 are yellow, it returns true
     public boolean yellowInBottom() throws InterruptedException {
         final int bottomY = 430;
-        final int bottomXLeft = 380, bottomXRight = 610;
+        final int bottomXLeft = 380, bottomXRight = 610; //230 total pixels
         int numYellow = 0;
 
         for(int x = bottomXLeft; x < bottomXRight; x++){
             int pixel = bitmap.getPixel(x, bottomY);
-            if (red(pixel) > 200 && green(pixel) > 200){
+            if (isYellow(pixel)){
                 numYellow++;
             }
         }
-        return (numYellow > 50);
+        return (numYellow > 150);
     }
 
-    //returns how many rings there must be based off on if
-    // there was yellow in the areas where the top and bottom rings are
+    //returns how many rings there must be based on if
+    //there was yellow in the areas where the top and bottom rings are
     public int numRings() throws InterruptedException {
         boolean yellowInTop = yellowInTop();
         boolean yellowInBottom = yellowInBottom();
@@ -114,6 +114,13 @@ public class Vision {
             return 1;
         }
         return 0;
+    }
+
+    public boolean isYellow(int pixel){
+        int red = red(pixel);
+        int green = green(pixel);
+        int blue = blue(pixel);
+        return (red > 200 && green > 200 && blue < 50);
     }
 
     /*
