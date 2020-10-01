@@ -14,14 +14,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import static android.graphics.Color.blue;
 import static android.graphics.Color.green;
 import static android.graphics.Color.red;
-
+//adb.exe connect 192.168.43.1:5555
 public class Vision {
     private LinearOpMode opMode;
     private VuforiaLocalizer vuforia;
 
-    private Bitmap bitmap;
+    public Bitmap bitmap;
 
-    //private final static double WIDTH_CONVERSION_FACTOR;
+    //bitmap is 864x480
+    public final static double WIDTH_CONVERSION_FACTOR = 864.0 / 1920.0;
+    public final static double HEIGHT_CONVERSION_FACTOR = 480.0 / 1080.0;
 
     public Vision(LinearOpMode opMode) throws InterruptedException{
         this.opMode = opMode;
@@ -50,67 +52,93 @@ public class Vision {
         }
         Bitmap bm = Bitmap.createBitmap(rgb.getWidth(), rgb.getHeight(), Bitmap.Config.RGB_565);
         bm.copyPixelsFromBuffer(rgb.getPixels());
-
-        opMode.telemetry.addData("width ", rgb.getWidth());
-        opMode.telemetry.addData("height ", rgb.getHeight());
-        opMode.telemetry.update();
-
         bitmap = bm;
     }
 
-    public void displayColor(int x, int y){
-        int pixel = bitmap.getPixel(x, y);
+    public void displayColor(int x, int y) throws InterruptedException {
+        getBitmap();
+        int pixel = bitmap.getPixel((int)(x * WIDTH_CONVERSION_FACTOR), (int)(y * HEIGHT_CONVERSION_FACTOR));
         opMode.telemetry.addData("RED: ", red(pixel));
         opMode.telemetry.addData("BLUE: ", blue(pixel));
         opMode.telemetry.addData("GREEN: ", green(pixel));
         opMode.telemetry.update();
     }
 
-    //yellow RGB value is 255, 255, 0
     //checks 1 row if pixels that should be in the area where the top ring is
-    //checks 230 pixels, and if 150 are yellow, it returns true
-    public boolean yellowInTop() throws InterruptedException {
-        final int topY = 350;
-        final int topXLeft = 380, topXRight = 610; //230 total pixels
+    //checks 200 pixels, and if 120 are yellow, it returns true
+    public boolean yellowInTopRightSide() throws InterruptedException {
+        final int topY = 440;
+        final int topXLeft = 1020, topXRight = 1220; //200 total pixels
         int numYellow = 0;
 
         for(int x = topXLeft; x < topXRight; x++){
-            int pixel = bitmap.getPixel(x, topY);
-            if (isYellow(pixel)){
+            int pixel = bitmap.getPixel((int)(x * WIDTH_CONVERSION_FACTOR), (int)(topY * HEIGHT_CONVERSION_FACTOR));
+            if (isOrange(pixel)){
                 numYellow++;
             }
         }
-        return (numYellow > 150);
+        return (numYellow > 120);
+    }
+
+    //checks 1 row if pixels that should be in the area where the top ring is
+    //checks 200 pixels, and if 70 are yellow, it returns true
+    public boolean yellowInTopLeftSide() throws InterruptedException {
+        final int topY = 440;
+        final int topXLeft = 1320, topXRight = 1520; //200 total pixels
+        int numYellow = 0;
+
+        for(int x = topXLeft; x < topXRight; x++){
+            int pixel = bitmap.getPixel((int)(x * WIDTH_CONVERSION_FACTOR), (int)(topY * HEIGHT_CONVERSION_FACTOR));
+            if (isOrange(pixel)){
+                numYellow++;
+            }
+        }
+        return (numYellow > 70);
+    }
+
+    //checks 1 row if pixels that should be in the area where the top ring is
+    //checks 200 pixels, and if 120 are yellow, it returns true
+    public boolean yellowInBottomLeftSide() throws InterruptedException {
+        final int topY = 500;
+        final int topXLeft = 1320, topXRight = 1520; //200 total pixels
+        int numYellow = 0;
+
+        for(int x = topXLeft; x < topXRight; x++){
+            int pixel = bitmap.getPixel((int)(x * WIDTH_CONVERSION_FACTOR), (int)(topY * HEIGHT_CONVERSION_FACTOR));
+            if (isOrange(pixel)){
+                numYellow++;
+            }
+        }
+        return (numYellow > 120);
     }
 
     //checks 1 row if pixels that should be in the area where the bottom ring is
-    //checks 230 pixels, and if 150 are yellow, it returns true
-    public boolean yellowInBottom() throws InterruptedException {
-        final int bottomY = 430;
-        final int bottomXLeft = 380, bottomXRight = 610; //230 total pixels
+    //checks 200 pixels, and if 70 are yellow, it returns true
+    public boolean yellowInBottomRightSide() throws InterruptedException {
+        final int bottomY = 500;
+        final int bottomXLeft = 1020, bottomXRight = 1220; //200 total pixels
         int numYellow = 0;
 
         for(int x = bottomXLeft; x < bottomXRight; x++){
-            int pixel = bitmap.getPixel(x, bottomY);
-            if (isYellow(pixel)){
+            int pixel = bitmap.getPixel((int)(x * WIDTH_CONVERSION_FACTOR), (int)(bottomY * HEIGHT_CONVERSION_FACTOR));
+            if (isOrange(pixel)){
                 numYellow++;
             }
         }
-        return (numYellow > 150);
+        return (numYellow > 70);
     }
 
-    //returns how many rings there must be based on if
-    //there was yellow in the areas where the top and bottom rings are
-    public int numRings() throws InterruptedException {
-        boolean yellowInTop = yellowInTop();
-        boolean yellowInBottom = yellowInBottom();
+    public int numRingsLeftSide() throws InterruptedException {
+        getBitmap();
+        boolean yellowInTop = yellowInTopLeftSide();
+        boolean yellowInBottom = yellowInBottomLeftSide();
 
         opMode.telemetry.addData("yellowInTop: ", yellowInTop);
         opMode.telemetry.addData("yellowInBottom: ", yellowInBottom);
         opMode.telemetry.update();
 
         if (yellowInTop && yellowInBottom){
-            return 3;
+            return 4;
         }
         else if(yellowInBottom){
             return 1;
@@ -118,74 +146,27 @@ public class Vision {
         return 0;
     }
 
-    public boolean isYellow(int pixel){
-        int red = red(pixel);
-        int green = green(pixel);
-        int blue = blue(pixel);
-        return (red > 200 && green > 200 && blue < 50);
-    }
+    //returns how many rings there must be based on if
+    //there was yellow in the areas where the top and bottom rings are
+    public int numRingsRightSide() throws InterruptedException {
+        getBitmap();
+        boolean yellowInTop = yellowInTopRightSide();
+        boolean yellowInBottom = yellowInBottomRightSide();
 
-    /*
-    ROHIT WAY, AVERAGES VALUES
-    public double avgX() {
-        double avgX = 0;
-        double avgY = 0;
-        Bitmap bitmap = null;
-        try {
-            bitmap = getBitmap();
-        } catch (InterruptedException e) {
-            opMode.telemetry.addData("ERROR", "BRUGHA THIS IS RART");
-            opMode.telemetry.update();
-        }
-        int skystonePixelCount = 0;
-        ArrayList<Integer> xValues = new ArrayList<>();
-        ArrayList<Integer> yValues = new ArrayList<>();
+        opMode.telemetry.addData("yellowInTop: ", yellowInTop);
+        opMode.telemetry.addData("yellowInBottom: ", yellowInBottom);
+        opMode.telemetry.update();
 
-        boolean[] yellowYVals = new boolean[bitmap.getHeight()];
-
-        for (int y = 0; y < bitmap.getHeight(); y++) {
-            for (int x = 0; x < bitmap.getWidth(); x++) {
-                int pixel = bitmap.getPixel(x, y);
-                if (red(pixel) >= YELRED_THRESHOLD && blue(pixel) <= YELBLUE_THRESHOLD && green(pixel) <= YELGREEN_THRESHOLD) {
-                    yellowYVals[y] = true;
-                    break;
-                }
-            }
+        if (yellowInTop && yellowInBottom){
+            return 4;
         }
-        for (int y = 0; y < bitmap.getHeight(); y++) {
-            if (yellowYVals[y]) {
-                for (int x = 0; x < bitmap.getWidth(); x++) {
-                    int pixel = bitmap.getPixel(x, y);
-                    if (red(pixel) <= RED_THRESHOLD && blue(pixel) <= BLUE_THRESHOLD && green(pixel) <= GREEN_THRESHOLD) {
-                        xValues.add(x);
-                        yValues.add(y);
-                    }
-                }
-            }
-        }
-        for (int xCoor : xValues) {
-            avgX += xCoor;
-        }
-        for (int yCoor : yValues) {
-            avgY += yCoor;
-        }
-        avgX /= xValues.size();
-        avgY /= yValues.size();
-
-        return avgX;
-    }
-
-    public int skyStonePos() {
-        double avg = avgX();
-        if(avg <= 260) {
+        else if(yellowInBottom){
             return 1;
         }
-        if(avg <= 400) {
-            return 2;
-        }
-        else{
-            return 3;
-        }
+        return 0;
     }
-    */
+
+    public boolean isOrange(int pixel){
+        return (blue(pixel) < 50);
+    }
 }
