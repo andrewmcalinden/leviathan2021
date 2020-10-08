@@ -8,6 +8,7 @@ import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
@@ -25,6 +26,14 @@ public class Vision {
     public final static double WIDTH_CONVERSION_FACTOR = 864.0 / 1920.0;
     public final static double HEIGHT_CONVERSION_FACTOR = 480.0 / 1080.0;
 
+    Telemetry.Item top;
+    Telemetry.Item bottom;
+
+    Telemetry.Item topNum;
+    Telemetry.Item bottomNum;
+
+    Telemetry.Item numRings;
+
     public Vision(LinearOpMode opMode) throws InterruptedException{
         this.opMode = opMode;
         int cameraMonitorViewId = this.opMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", this.opMode.hardwareMap.appContext.getPackageName());
@@ -36,6 +45,12 @@ public class Vision {
         vuforia.setFrameQueueCapacity(4); //tells VuforiaLocalizer to only store one frame at a time
         vuforia.enableConvertFrameToBitmap();
         getBitmap();
+
+        top = opMode.telemetry.addData("yellowInTop: ", 0);
+        bottom = opMode.telemetry.addData("yellowInBottom: ", 0);
+        topNum = opMode.telemetry.addData("numTop: ", 0);
+        bottomNum = opMode.telemetry.addData("numBottom: ", 0);
+        numRings = opMode.telemetry.addData("numRings: ", 0);
     }
 
     public void getBitmap() throws InterruptedException {
@@ -59,13 +74,13 @@ public class Vision {
         getBitmap();
         int pixel = bitmap.getPixel((int)(x * WIDTH_CONVERSION_FACTOR), (int)(y * HEIGHT_CONVERSION_FACTOR));
         opMode.telemetry.addData("RED: ", red(pixel));
-        opMode.telemetry.addData("BLUE: ", blue(pixel));
         opMode.telemetry.addData("GREEN: ", green(pixel));
+        opMode.telemetry.addData("BLUE: ", blue(pixel));
         opMode.telemetry.update();
     }
 
     //checks 1 row if pixels that should be in the area where the top ring is
-    //checks 200 pixels, and if 120 are yellow, it returns true
+    //checks 200 pixels, and if 60 are yellow, it returns true
     public boolean yellowInTopRightSide() throws InterruptedException {
         final int topY = 440;
         final int topXLeft = 1020, topXRight = 1220; //200 total pixels
@@ -77,11 +92,13 @@ public class Vision {
                 numYellow++;
             }
         }
-        return (numYellow > 120);
+        topNum.setValue(numYellow);
+        opMode.telemetry.update();
+        return (numYellow > 60);
     }
 
     //checks 1 row if pixels that should be in the area where the top ring is
-    //checks 200 pixels, and if 70 are yellow, it returns true
+    //checks 200 pixels, and if 60 are yellow, it returns true
     public boolean yellowInTopLeftSide() throws InterruptedException {
         final int topY = 440;
         final int topXLeft = 1320, topXRight = 1520; //200 total pixels
@@ -93,11 +110,13 @@ public class Vision {
                 numYellow++;
             }
         }
-        return (numYellow > 70);
+        topNum.setValue(numYellow);
+        opMode.telemetry.update();
+        return (numYellow > 60);
     }
 
     //checks 1 row if pixels that should be in the area where the top ring is
-    //checks 200 pixels, and if 120 are yellow, it returns true
+    //checks 200 pixels, and if 60 are yellow, it returns true
     public boolean yellowInBottomLeftSide() throws InterruptedException {
         final int topY = 500;
         final int topXLeft = 1320, topXRight = 1520; //200 total pixels
@@ -109,11 +128,13 @@ public class Vision {
                 numYellow++;
             }
         }
-        return (numYellow > 120);
+        bottomNum.setValue(numYellow);
+        opMode.telemetry.update();
+        return (numYellow > 60);
     }
 
     //checks 1 row if pixels that should be in the area where the bottom ring is
-    //checks 200 pixels, and if 70 are yellow, it returns true
+    //checks 200 pixels, and if 60 are yellow, it returns true
     public boolean yellowInBottomRightSide() throws InterruptedException {
         final int bottomY = 500;
         final int bottomXLeft = 1020, bottomXRight = 1220; //200 total pixels
@@ -125,7 +146,9 @@ public class Vision {
                 numYellow++;
             }
         }
-        return (numYellow > 70);
+        bottomNum.setValue(numYellow);
+        opMode.telemetry.update();
+        return (numYellow > 60);
     }
 
     public int numRingsLeftSide() throws InterruptedException {
@@ -133,16 +156,19 @@ public class Vision {
         boolean yellowInTop = yellowInTopLeftSide();
         boolean yellowInBottom = yellowInBottomLeftSide();
 
-        opMode.telemetry.addData("yellowInTop: ", yellowInTop);
-        opMode.telemetry.addData("yellowInBottom: ", yellowInBottom);
+        top.setValue(yellowInTop);
+        bottom.setValue(yellowInBottom);
         opMode.telemetry.update();
 
         if (yellowInTop && yellowInBottom){
+            numRings.setValue(4);
             return 4;
         }
         else if(yellowInBottom){
+            numRings.setValue(1);
             return 1;
         }
+        numRings.setValue(0);
         return 0;
     }
 
@@ -153,16 +179,19 @@ public class Vision {
         boolean yellowInTop = yellowInTopRightSide();
         boolean yellowInBottom = yellowInBottomRightSide();
 
-        opMode.telemetry.addData("yellowInTop: ", yellowInTop);
-        opMode.telemetry.addData("yellowInBottom: ", yellowInBottom);
+        top.setValue(yellowInTop);
+        bottom.setValue(yellowInBottom);
         opMode.telemetry.update();
 
         if (yellowInTop && yellowInBottom){
+            numRings.setValue(4);
             return 4;
         }
         else if(yellowInBottom){
+            numRings.setValue(1);
             return 1;
         }
+        numRings.setValue(0);
         return 0;
     }
 
