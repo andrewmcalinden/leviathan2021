@@ -3,6 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+//controller wire
+//AA batteries
+//gobilda servo programmer
+//plastic tubs
+
 @TeleOp(name = "Teleop", group = "18030")
 public class Teleop extends LinearOpMode{
 
@@ -17,9 +23,10 @@ public class Teleop extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         initHardware();
         while(!isStopRequested()){
-            double robotHeadingRad = gyro.getAngle() * (180 / Math.PI);
-            //might need to negate left stick y because apparently that's a thing
-            fieldCentricMecanum(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, robotHeadingRad);
+//            double robotHeadingRad = gyro.getAngle() * (180 / Math.PI);
+//            //might need to negate left stick y because apparently that's a thing
+//            fieldCentricMecanum(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, robotHeadingRad);
+            robotCentricTrigMecanum(gamepad1.left_stick_x, gamepad1.left_stick_y, -gamepad1.right_stick_x);
         }
     }
 
@@ -29,10 +36,10 @@ public class Teleop extends LinearOpMode{
         bL = hardwareMap.get(DcMotor.class, "bL");
         bR = hardwareMap.get(DcMotor.class, "bR");
 
-        fR.setDirection(DcMotor.Direction.FORWARD);
+        fR.setDirection(DcMotor.Direction.REVERSE);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.REVERSE);
+        bL.setDirection(DcMotor.Direction.FORWARD);
 
         gyro = new Sensors(this);
     }
