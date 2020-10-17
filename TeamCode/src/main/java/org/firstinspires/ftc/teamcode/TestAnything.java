@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode;
+
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -13,11 +15,12 @@ public class TestAnything extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         grabber = hardwareMap.servo.get("grabber");
         waitForStart();
-        grabber.setPosition(.5);
-        telemetry.addLine("lol");
-        telemetry.update();
-        sleep(2000);
-        telemetry.update();
-        grabber.setPosition(.7);
+        while(!isStopRequested()){
+            grabber.setPosition(0);
+            telemetry.addLine("lol");
+            telemetry.update();
+            sleep(1000);
+            grabber.setPosition(1);
+        }
     }
 }
