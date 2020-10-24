@@ -1,13 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-//controller wire
-//AA batteries
-//gobilda servo programmer
-//plastic tubs
+
+import org.firstinspires.ftc.teamcode.hardware.Sensors;
+import org.firstinspires.ftc.teamcode.math.Vector;
 
 @TeleOp(name = "Teleop", group = "18030")
 public class Teleop extends LinearOpMode{
