@@ -1,15 +1,17 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.hardware.Sensors;
+import org.firstinspires.ftc.teamcode.hardware.Shooter;
+import org.firstinspires.ftc.teamcode.hardware.Transfer;
 import org.firstinspires.ftc.teamcode.math.Vector;
 
-@TeleOp(name = "Teleop", group = "18030")
-public class Teleop extends LinearOpMode{
-
+public abstract class AdvancedLib extends OpMode {
     public DcMotor fL;
     public DcMotor fR;
     public DcMotor bL;
@@ -17,19 +19,14 @@ public class Teleop extends LinearOpMode{
 
     public Sensors gyro;
 
+    public DcMotor intake;
+
+    public Shooter shooter;
+    public Grabber grabber;
+    public Transfer transfer;
+
     @Override
-    public void runOpMode() throws InterruptedException {
-        initHardware();
-        waitForStart();
-        while(!isStopRequested()){
-            double robotHeadingRad = gyro.getAngle() * (180 / Math.PI);
-            //might need to negate left stick y because apparently that's a thing
-            robotCentricTrigMecanum(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-
-        }
-    }
-
-    public void initHardware(){
+    public void init(){
         fL = hardwareMap.get(DcMotor.class, "fL");
         fR = hardwareMap.get(DcMotor.class, "fR");
         bL = hardwareMap.get(DcMotor.class, "bL");
@@ -40,9 +37,14 @@ public class Teleop extends LinearOpMode{
         bR.setDirection(DcMotor.Direction.FORWARD);
         bL.setDirection(DcMotor.Direction.FORWARD);
 
+        intake = hardwareMap.get(DcMotor.class, "intake");
+        intake.setDirection((DcMotor.Direction.FORWARD));
+
         gyro = new Sensors(this);
 
-
+        shooter = new Shooter(this);
+        grabber = new Grabber(this);
+        transfer = new Transfer(this);
     }
 
     //angle must be measured counterclockwise from x axis
@@ -160,5 +162,38 @@ public class Teleop extends LinearOpMode{
         fR.setPower(fr);
         bL.setPower(bl);
         bR.setPower(br);
+    }
+
+    public void updateIntake(){
+        if(gamepad1.right_bumper){
+            intake.setPower(1);
+        }
+        else{
+            intake.setPower(0);
+        }
+    }
+
+    public void updateShooter(){
+        if (gamepad1.a) {
+            shooter.startShooting();
+        }
+        else if(gamepad1.b){
+            shooter.stopShooting();
+        }
+    }
+
+    public void updateGrabber(){
+        grabber.update(gamepad2.right_stick_y, gamepad2.b, gamepad2.a);
+    }
+
+    public void updateTransfer(){
+        if(gamepad2.x){
+            ElapsedTime timer = new ElapsedTime();
+            double start = timer.milliseconds();
+            transfer.push();
+            if(timer.milliseconds() - start > 500){
+                transfer.retract();
+            }
+        }
     }
 }
