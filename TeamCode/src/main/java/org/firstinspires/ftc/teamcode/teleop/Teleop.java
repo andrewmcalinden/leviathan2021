@@ -24,7 +24,7 @@ public class Teleop extends LinearOpMode{
         while(!isStopRequested()){
             double robotHeadingRad = gyro.getAngle() * (180 / Math.PI);
             //might need to negate left stick y because apparently that's a thing
-            robotCentricTrigMecanum(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            fieldCentricMecanum(-gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x, robotHeadingRad);
 
         }
     }
@@ -78,7 +78,8 @@ public class Teleop extends LinearOpMode{
         telemetry.addData("fl: ", fl);
         telemetry.addData("fr: ", fr);
         telemetry.addData("bl: ", bl);
-        telemetry.addData("br ", br);
+        telemetry.addData("br: ", br);
+        telemetry.addData("heading: ", robotHeadingRad * (Math.PI / 180.0));
         telemetry.update();
 
         fL.setPower(fl);
