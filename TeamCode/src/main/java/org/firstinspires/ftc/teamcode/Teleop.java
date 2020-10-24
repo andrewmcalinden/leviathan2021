@@ -26,7 +26,7 @@ public class Teleop extends LinearOpMode{
         while(!isStopRequested()){
             double robotHeadingRad = gyro.getAngle() * (180 / Math.PI);
             //might need to negate left stick y because apparently that's a thing
-            fieldCentricMecanum(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, robotHeadingRad);
+            robotCentricTrigMecanum(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         }
     }
