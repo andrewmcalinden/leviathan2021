@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.hardware.Sensors;
 import org.firstinspires.ftc.teamcode.math.Vector;
@@ -22,9 +23,9 @@ public class Teleop extends LinearOpMode{
         initHardware();
         waitForStart();
         while(!isStopRequested()){
-            double robotHeadingRad = gyro.getAngle() * (180 / Math.PI);
+            double robotHeadingRad = gyro.getAngle() * (Math.PI / 180);
             //might need to negate left stick y because apparently that's a thing
-            fieldCentricMecanum(-gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x, robotHeadingRad);
+            fieldCentricMecanum(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, robotHeadingRad);
 
         }
     }
@@ -35,10 +36,10 @@ public class Teleop extends LinearOpMode{
         bL = hardwareMap.get(DcMotor.class, "bL");
         bR = hardwareMap.get(DcMotor.class, "bR");
 
-        fR.setDirection(DcMotor.Direction.REVERSE);
+        fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.FORWARD);
+        bL.setDirection(DcMotor.Direction.REVERSE);
 
         gyro = new Sensors(this);
 
@@ -79,7 +80,7 @@ public class Teleop extends LinearOpMode{
         telemetry.addData("fr: ", fr);
         telemetry.addData("bl: ", bl);
         telemetry.addData("br: ", br);
-        telemetry.addData("heading: ", robotHeadingRad * (Math.PI / 180.0));
+        telemetry.addData("heading: ", robotHeadingRad * (180.0 / Math.PI));
         telemetry.update();
 
         fL.setPower(fl);

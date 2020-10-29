@@ -18,4 +18,8 @@ public class Vector {
         double newY = x * Math.sin(radians) + y * Math.cos(radians);
         return new Vector(newX, newY);
     }
+
+    public String toString(){
+        return "X: " + String.format("%.2f", x) + "Y: " + String.format("%.2f", y) + "Magnitude: " + String.format("%.2f", magnitude) + "Angle: " + String.format("%.2f", angle);
+    }
 }

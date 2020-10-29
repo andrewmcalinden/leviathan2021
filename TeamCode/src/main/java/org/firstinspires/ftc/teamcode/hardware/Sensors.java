@@ -12,6 +12,8 @@ public class Sensors {
     Orientation angles;
 
     public Sensors(LinearOpMode opMode){
+        opMode.telemetry.addLine("initializing imu, please wait");
+        opMode.telemetry.speak("initializing imu, please wait");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -21,6 +23,8 @@ public class Sensors {
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
         boolean initialize = imu.initialize(parameters);
+        opMode.telemetry.addLine("initialization complete");
+        opMode.telemetry.speak("initialization complete");
     }
 
     public Sensors(OpMode opMode){
