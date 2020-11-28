@@ -12,7 +12,9 @@ public class TestAnything extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Vector test = new Vector(1, 0);
-        //test = test.rotated(-180 * )
+        grabber = hardwareMap.get(Servo.class, "grabber");
+        grabber.setPosition(0);
+        telemetry.speak("initialization complete");
+        grabber.setPosition(.2);
     }
 }
