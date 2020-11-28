@@ -16,6 +16,7 @@ import static android.graphics.Color.blue;
 import static android.graphics.Color.green;
 import static android.graphics.Color.red;
 //adb.exe connect 192.168.43.1:5555
+//test
 public class Vision {
     private LinearOpMode opMode;
     private VuforiaLocalizer vuforia;
