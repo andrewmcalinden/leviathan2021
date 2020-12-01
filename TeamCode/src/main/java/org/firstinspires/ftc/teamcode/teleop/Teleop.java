@@ -42,8 +42,6 @@ public class Teleop extends LinearOpMode{
         bL.setDirection(DcMotor.Direction.REVERSE);
 
         gyro = new Sensors(this);
-
-
     }
 
     //angle must be measured counterclockwise from x axis

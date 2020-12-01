@@ -21,9 +21,14 @@ public abstract class AdvancedLib extends OpMode {
 
     public DcMotor intake;
 
-    public Shooter shooter;
+    //public Shooter shooter;
     public Grabber grabber;
-    public Transfer transfer;
+    //public Transfer transfer;
+
+    public DcMotor shooter;
+    public DcMotor transferMotor;
+
+    public Servo transferServo;
 
     @Override
     public void init(){
@@ -42,9 +47,14 @@ public abstract class AdvancedLib extends OpMode {
 
         gyro = new Sensors(this);
 
-        shooter = new Shooter(this);
+        //shooter = new Shooter(this);
         grabber = new Grabber(this);
-        transfer = new Transfer(this);
+        //transfer = new Transfer(this);
+
+        transferMotor = hardwareMap.get(DcMotor.class, "transfer");
+        transferServo = hardwareMap.get(Servo.class, "pusher");
+        shooter = hardwareMap.get(DcMotor.class, "shooter");
+
     }
 
     //angle must be measured counterclockwise from x axis
@@ -175,10 +185,12 @@ public abstract class AdvancedLib extends OpMode {
 
     public void updateShooter(){
         if (gamepad1.a) {
-            shooter.startShooting();
+            //shooter.startShooting();
+            shooter.setPower(1);
         }
         else if(gamepad1.b){
-            shooter.stopShooting();
+            //shooter.stopShooting();
+            shooter.setPower(0);
         }
     }
 
@@ -187,13 +199,19 @@ public abstract class AdvancedLib extends OpMode {
     }
 
     public void updateTransfer(){
-        if(gamepad2.x){
+        if(gamepad1.x){
             ElapsedTime timer = new ElapsedTime();
             double start = timer.milliseconds();
-            transfer.push();
+            transferServo.setPosition(1);
             if(timer.milliseconds() - start > 500){
-                transfer.retract();
+                transferServo.setPosition(0);
             }
+        }
+        if (gamepad1.y) {
+            transferMotor.setPower(1);
+        }
+        else{
+            transferMotor.setPower(0);
         }
     }
 }
