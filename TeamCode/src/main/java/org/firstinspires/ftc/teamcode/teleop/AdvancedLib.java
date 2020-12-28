@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -25,7 +26,7 @@ public abstract class AdvancedLib extends OpMode {
     public Grabber grabber;
     //public Transfer transfer;
 
-    public DcMotor shooter;
+    public DcMotor mtrShooter;
     public DcMotor transferMotor;
 
     public Servo transferServo;
@@ -42,18 +43,21 @@ public abstract class AdvancedLib extends OpMode {
         bR.setDirection(DcMotor.Direction.FORWARD);
         bL.setDirection(DcMotor.Direction.FORWARD);
 
-        intake = hardwareMap.get(DcMotor.class, "intake");
-        intake.setDirection((DcMotor.Direction.FORWARD));
+        //mtrShooter = hardwareMap.dcMotor.get("mtrShooter");
+        //mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        //intake = hardwareMap.get(DcMotor.class, "intake");
+        //intake.setDirection((DcMotor.Direction.FORWARD));
 
         gyro = new Sensors(this);
 
         //shooter = new Shooter(this);
-        grabber = new Grabber(this);
+
+        //grabber = new Grabber(this);
         //transfer = new Transfer(this);
 
-        transferMotor = hardwareMap.get(DcMotor.class, "transfer");
-        transferServo = hardwareMap.get(Servo.class, "pusher");
-        shooter = hardwareMap.get(DcMotor.class, "shooter");
+//        transferMotor = hardwareMap.get(DcMotor.class, "transfer");
+//        transferServo = hardwareMap.get(Servo.class, "pusher");
+
 
     }
 
@@ -91,6 +95,7 @@ public abstract class AdvancedLib extends OpMode {
         telemetry.addData("fr: ", fr);
         telemetry.addData("bl: ", bl);
         telemetry.addData("br ", br);
+        telemetry.addData("heading", robotHeadingRad);
         telemetry.update();
 
         fL.setPower(fl);
@@ -174,6 +179,24 @@ public abstract class AdvancedLib extends OpMode {
         bR.setPower(br);
     }
 
+//    public double weightAvg(double x, double y, double z){
+//        double d = 0.0;
+//        if((Math.abs(x) + Math.abs(y) + Math.abs(z)) != 0){
+//            d = ((x * Math.abs(x)) + (y * Math.abs(y)) + (z * Math.abs(z))) / (Math.abs(x) + Math.abs(y) + Math.abs(z));
+//        }
+//        return d;
+//    }
+
+//    public void robotCentricWeightedMecanum(double x, double y, double turn){
+//        //fL.setPower(weightAvg(-x, y, turn));
+//        //fR.setPower(weightAvg(x, y, -turn));
+//        bL.setPower(weightAvg(-x, y, turn));
+//        //bR.setPower(weightAvg(x, y, -turn));
+//        telemetry.addData("x", x);
+//        telemetry.addData("y",y);
+//        telemetry.addData("turn", turn);
+//    }
+
     public void updateIntake(){
         if(gamepad1.right_bumper){
             intake.setPower(1);
@@ -186,11 +209,11 @@ public abstract class AdvancedLib extends OpMode {
     public void updateShooter(){
         if (gamepad1.a) {
             //shooter.startShooting();
-            shooter.setPower(1);
+            mtrShooter.setPower(1);
         }
         else if(gamepad1.b){
             //shooter.stopShooting();
-            shooter.setPower(0);
+            mtrShooter.setPower(0);
         }
     }
 

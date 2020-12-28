@@ -11,25 +11,25 @@ public class Shooter {
     public final static double MAX_VELOCITY = 0;
 
     public Shooter(LinearOpMode opMode){
-        shooter = opMode.hardwareMap.get(DcMotorEx.class, "shooter");
+        shooter = opMode.hardwareMap.get(DcMotorEx.class, "mtrShooter");
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooter.setVelocityPIDFCoefficients(0, 0, 0, 0);
         startShooting();
     }
 
     public Shooter(OpMode opMode){
-        shooter = opMode.hardwareMap.get(DcMotorEx.class, "shooter");
+        shooter = opMode.hardwareMap.get(DcMotorEx.class, "mtrShooter");
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooter.setVelocityPIDFCoefficients(0, 0, 0, 0);
         startShooting();
     }
 
     public void startShooting(){
-        shooter.setVelocity(MAX_VELOCITY);
+        shooter.setPower(1);
     }
 
     public void stopShooting(){
-        shooter.setVelocity(0);
+        shooter.setPower(0);
     }
 
 }
