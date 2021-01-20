@@ -38,15 +38,15 @@ public abstract class AdvancedLib extends OpMode {
         bL = hardwareMap.get(DcMotor.class, "bL");
         bR = hardwareMap.get(DcMotor.class, "bR");
 
-        fR.setDirection(DcMotor.Direction.REVERSE);
+        fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
         bL.setDirection(DcMotor.Direction.FORWARD);
 
-        //mtrShooter = hardwareMap.dcMotor.get("mtrShooter");
-        //mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
-        //intake = hardwareMap.get(DcMotor.class, "intake");
-        //intake.setDirection((DcMotor.Direction.FORWARD));
+        mtrShooter = hardwareMap.dcMotor.get("mtrShooter");
+        mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+//        intake = hardwareMap.get(DcMotor.class, "intake");
+//        intake.setDirection((DcMotor.Direction.FORWARD));
 
         gyro = new Sensors(this);
 

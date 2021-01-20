@@ -86,3 +86,5 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 .idea/misc.xml
+.idea/misc.xml
+*.xml

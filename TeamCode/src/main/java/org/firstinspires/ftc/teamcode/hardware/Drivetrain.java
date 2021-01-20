@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Sensors;
+import org.firstinspires.ftc.teamcode.testing.TestAnything;
 
 public class Drivetrain  {
 
@@ -26,7 +27,7 @@ public class Drivetrain  {
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    public void Drivetrain(LinearOpMode opMode) {
+    public Drivetrain(LinearOpMode opMode) throws InterruptedException{
 
         this.opMode = opMode;
 
