@@ -12,7 +12,7 @@ public class AdvancedTeleop extends AdvancedLib {
         fieldCentricMecanum(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, robotHeadingRad);
         //updateIntake(); //hold right bumper gamepad1
         updateShooter(); //toggle a and b gamepad1
-//        updateGrabber(); //right stick y gamepad2
+        updateGrabber(); //right stick y gamepad2
 //        updateTransfer(); //hold y for motor, tap x for servo gamepad1
     }
 }

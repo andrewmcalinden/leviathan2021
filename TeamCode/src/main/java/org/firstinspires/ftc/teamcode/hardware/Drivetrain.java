@@ -35,10 +35,10 @@ public class Drivetrain  {
 
         timer = new ElapsedTime();
 
-        fR = opMode.hardwareMap.get(DcMotor.class, "fr");
-        fL = opMode.hardwareMap.get(DcMotor.class, "fl");
-        bR = opMode.hardwareMap.get(DcMotor.class, "br");
-        bL = opMode.hardwareMap.get(DcMotor.class, "bl");
+        fR = opMode.hardwareMap.get(DcMotor.class, "fR");
+        fL = opMode.hardwareMap.get(DcMotor.class, "fL");
+        bR = opMode.hardwareMap.get(DcMotor.class, "bR");
+        bL = opMode.hardwareMap.get(DcMotor.class, "bL");
 
         fR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -48,7 +48,7 @@ public class Drivetrain  {
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.REVERSE);
+        bL.setDirection(DcMotor.Direction.FORWARD);
     }
 
     public void resetEncoder() {

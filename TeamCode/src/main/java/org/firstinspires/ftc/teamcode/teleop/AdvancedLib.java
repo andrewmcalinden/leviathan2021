@@ -52,7 +52,7 @@ public abstract class AdvancedLib extends OpMode {
 
         //shooter = new Shooter(this);
 
-        //grabber = new Grabber(this);
+        grabber = new Grabber(this);
         //transfer = new Transfer(this);
 
 //        transferMotor = hardwareMap.get(DcMotor.class, "transfer");
