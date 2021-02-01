@@ -9,39 +9,39 @@ import static java.lang.Thread.sleep;
 
 public class Grabber {
     public DcMotor arm;
-    //public Servo grabber;
+    public Servo grabber;
 
     public Grabber(LinearOpMode opMode){
         arm = opMode.hardwareMap.get(DcMotor.class, "arm");
         arm.setDirection((DcMotor.Direction.FORWARD));
 
-        //grabber = opMode.hardwareMap.servo.get("grabber");
-        //closeGrabber();
+        grabber = opMode.hardwareMap.servo.get("grabber");
+        closeGrabber();
     }
 
     public Grabber(OpMode opMode){
         arm = opMode.hardwareMap.get(DcMotor.class, "arm");
         arm.setDirection((DcMotor.Direction.FORWARD));
 
-        //grabber = opMode.hardwareMap.servo.get("grabber");
-        //closeGrabber();
+        grabber = opMode.hardwareMap.servo.get("grabber");
+        openGrabber();
     }
 
     public void update(double power, boolean close, boolean open){
-        arm.setPower(Math.abs(power) * power * .2);
-//        if(close){
-//            closeGrabber();
-//        }
-//        else if(open){
-//            openGrabber();
-//        }
+        arm.setPower(Math.abs(power) * power * .4);
+        if(close){
+            closeGrabber();
+        }
+        if(open){
+            openGrabber();
+        }
     }
 
-//    public void closeGrabber(){
-//        grabber.setPosition(0);
-//    }
-//
-//    public void openGrabber(){
-//        grabber.setPosition(1);
-//    }
+    public void closeGrabber(){
+        grabber.setPosition(.2);
+    }
+
+    public void openGrabber(){
+        grabber.setPosition(.4);
+    }
 }

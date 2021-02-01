@@ -13,6 +13,6 @@ public class AdvancedTeleop extends AdvancedLib {
         updateIntake(); //hold right bumper gamepad1
         updateShooter(); //toggle a and b gamepad1
         updateGrabber(); //right stick y gamepad2
-//        updateTransfer(); //hold y for motor, tap x for servo gamepad1
+        updateTranfer();
     }
 }

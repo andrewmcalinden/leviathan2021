@@ -22,15 +22,12 @@ public abstract class AdvancedLib extends OpMode {
 
     public DcMotor intake;
 
-    //public Shooter shooter;
     public Grabber grabber;
-    //public Transfer transfer;
 
     public DcMotor mtrShooter;
-    //public DcMotor transferMotor;
+    public DcMotor transfer;
 
-    //public Servo transferServo;
-    public Servo grabServo;
+    public Servo transferServo;
 
     @Override
     public void init(){
@@ -48,19 +45,16 @@ public abstract class AdvancedLib extends OpMode {
         mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intake = hardwareMap.get(DcMotor.class, "intake");
-        intake.setDirection((DcMotor.Direction.FORWARD));
+        intake.setDirection((DcMotor.Direction.REVERSE));
 
         gyro = new Sensors(this);
 
-        grabServo = hardwareMap.get(Servo.class, "grabber");
-
-        //shooter = new Shooter(this);
 
         grabber = new Grabber(this);
-        //transfer = new Transfer(this);
 
-//        transferMotor = hardwareMap.get(DcMotor.class, "transfer");
-//        transferServo = hardwareMap.get(Servo.class, "pusher");
+        transfer = hardwareMap.get(DcMotor.class, "transfer");
+
+        transferServo = hardwareMap.get(Servo.class, "transferServo");
 
 
     }
@@ -106,6 +100,15 @@ public abstract class AdvancedLib extends OpMode {
         fR.setPower(fr);
         bL.setPower(bl);
         bR.setPower(br);
+    }
+
+    public void updateTranfer(){
+        if(gamepad1.x){
+            transferServo.setPosition(0);
+        }
+        if(gamepad1.y){
+            transferServo.setPosition(0.5);
+        }
     }
 
     public void robotCentricTrigMecanum(double x, double y, double turn){
@@ -218,21 +221,17 @@ public abstract class AdvancedLib extends OpMode {
             telemetry.addLine("shooter");
             telemetry.update();
             mtrShooter.setPower(1);
+            transfer.setPower(1);
         }
         else if(gamepad1.b){
             //shooter.stopShooting();
             mtrShooter.setPower(0);
+            transfer.setPower(0);
         }
     }
 
     public void updateGrabber(){
         grabber.update(gamepad2.right_stick_y, gamepad2.b, gamepad2.a);
-        if(gamepad2.b){
-            grabServo.setPosition(1);
-        }
-        else if(gamepad1.a){
-            grabServo.setPosition(0);
-        }
     }
 
 //    public void updateTransfer(){
