@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.math.Vector;
 
-@Autonomous(name = "test anything", group = "18030")
+@Autonomous(name = "encoder test", group = "18030")
 public class EncoderTest extends LinearOpMode {
 
     public Drivetrain dt;

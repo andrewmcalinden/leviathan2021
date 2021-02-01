@@ -27,9 +27,10 @@ public abstract class AdvancedLib extends OpMode {
     //public Transfer transfer;
 
     public DcMotor mtrShooter;
-    public DcMotor transferMotor;
+    //public DcMotor transferMotor;
 
-    public Servo transferServo;
+    //public Servo transferServo;
+    public Servo grabServo;
 
     @Override
     public void init(){
@@ -43,12 +44,15 @@ public abstract class AdvancedLib extends OpMode {
         bR.setDirection(DcMotor.Direction.FORWARD);
         bL.setDirection(DcMotor.Direction.FORWARD);
 
-        mtrShooter = hardwareMap.dcMotor.get("mtrShooter");
+        mtrShooter = hardwareMap.dcMotor.get("shooter");
         mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
-//        intake = hardwareMap.get(DcMotor.class, "intake");
-//        intake.setDirection((DcMotor.Direction.FORWARD));
+
+        intake = hardwareMap.get(DcMotor.class, "intake");
+        intake.setDirection((DcMotor.Direction.FORWARD));
 
         gyro = new Sensors(this);
+
+        grabServo = hardwareMap.get(Servo.class, "grabber");
 
         //shooter = new Shooter(this);
 
@@ -199,6 +203,8 @@ public abstract class AdvancedLib extends OpMode {
 
     public void updateIntake(){
         if(gamepad1.right_bumper){
+            telemetry.addLine("intake");
+            telemetry.update();
             intake.setPower(1);
         }
         else{
@@ -209,6 +215,8 @@ public abstract class AdvancedLib extends OpMode {
     public void updateShooter(){
         if (gamepad1.a) {
             //shooter.startShooting();
+            telemetry.addLine("shooter");
+            telemetry.update();
             mtrShooter.setPower(1);
         }
         else if(gamepad1.b){
@@ -219,22 +227,28 @@ public abstract class AdvancedLib extends OpMode {
 
     public void updateGrabber(){
         grabber.update(gamepad2.right_stick_y, gamepad2.b, gamepad2.a);
+        if(gamepad2.b){
+            grabServo.setPosition(1);
+        }
+        else if(gamepad1.a){
+            grabServo.setPosition(0);
+        }
     }
 
-    public void updateTransfer(){
-        if(gamepad1.x){
-            ElapsedTime timer = new ElapsedTime();
-            double start = timer.milliseconds();
-            transferServo.setPosition(1);
-            if(timer.milliseconds() - start > 500){
-                transferServo.setPosition(0);
-            }
-        }
-        if (gamepad1.y) {
-            transferMotor.setPower(1);
-        }
-        else{
-            transferMotor.setPower(0);
-        }
-    }
+//    public void updateTransfer(){
+//        if(gamepad1.x){
+//            ElapsedTime timer = new ElapsedTime();
+//            double start = timer.milliseconds();
+//            transferServo.setPosition(1);
+//            if(timer.milliseconds() - start > 500){
+//                transferServo.setPosition(0);
+//            }
+//        }
+//        if (gamepad1.y) {
+//            transferMotor.setPower(1);
+//        }
+//        else{
+//            transferMotor.setPower(0);
+//        }
+//    }
 }
