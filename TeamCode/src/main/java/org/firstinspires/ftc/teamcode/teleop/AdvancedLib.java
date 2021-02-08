@@ -29,6 +29,12 @@ public abstract class AdvancedLib extends OpMode {
 
     public Servo transferServo;
 
+    public boolean pressedLastTime;
+    public double mtrPower;
+
+    public double servoPos;
+    public boolean servoPressedLastTime;
+
     @Override
     public void init(){
         fL = hardwareMap.get(DcMotor.class, "fL");
@@ -49,14 +55,16 @@ public abstract class AdvancedLib extends OpMode {
 
         gyro = new Sensors(this);
 
-
         grabber = new Grabber(this);
 
         transfer = hardwareMap.get(DcMotor.class, "transfer");
-
         transferServo = hardwareMap.get(Servo.class, "transferServo");
 
+        pressedLastTime = false;
+        mtrPower = 0;
 
+        servoPos = 0;
+        servoPressedLastTime = false;
     }
 
     //angle must be measured counterclockwise from x axis
@@ -103,12 +111,16 @@ public abstract class AdvancedLib extends OpMode {
     }
 
     public void updateTranfer(){
-        if(gamepad1.x){
-            transferServo.setPosition(0);
+        if (gamepad1.x && !servoPressedLastTime){
+            if (servoPos == 0){
+                servoPos = .5;
+            }
+            else{
+                servoPos = 0;
+            }
+            transferServo.setPosition(servoPos);
         }
-        if(gamepad1.y){
-            transferServo.setPosition(0.5);
-        }
+        servoPressedLastTime = gamepad1.x;
     }
 
     public void robotCentricTrigMecanum(double x, double y, double turn){
@@ -186,28 +198,8 @@ public abstract class AdvancedLib extends OpMode {
         bR.setPower(br);
     }
 
-//    public double weightAvg(double x, double y, double z){
-//        double d = 0.0;
-//        if((Math.abs(x) + Math.abs(y) + Math.abs(z)) != 0){
-//            d = ((x * Math.abs(x)) + (y * Math.abs(y)) + (z * Math.abs(z))) / (Math.abs(x) + Math.abs(y) + Math.abs(z));
-//        }
-//        return d;
-//    }
-
-//    public void robotCentricWeightedMecanum(double x, double y, double turn){
-//        //fL.setPower(weightAvg(-x, y, turn));
-//        //fR.setPower(weightAvg(x, y, -turn));
-//        bL.setPower(weightAvg(-x, y, turn));
-//        //bR.setPower(weightAvg(x, y, -turn));
-//        telemetry.addData("x", x);
-//        telemetry.addData("y",y);
-//        telemetry.addData("turn", turn);
-//    }
-
     public void updateIntake(){
         if(gamepad1.right_bumper){
-            telemetry.addLine("intake");
-            telemetry.update();
             intake.setPower(1);
         }
         else{
@@ -216,38 +208,20 @@ public abstract class AdvancedLib extends OpMode {
     }
 
     public void updateShooter(){
-        if (gamepad1.a) {
-            //shooter.startShooting();
-            telemetry.addLine("shooter");
-            telemetry.update();
-            mtrShooter.setPower(1);
-            transfer.setPower(1);
+        if (gamepad1.a && !pressedLastTime){
+            if (mtrPower == 0){
+                mtrPower = 1;
+            }
+            else{
+                mtrPower = 0;
+            }
+            mtrShooter.setPower(mtrPower);
+            transfer.setPower(mtrPower);
         }
-        else if(gamepad1.b){
-            //shooter.stopShooting();
-            mtrShooter.setPower(0);
-            transfer.setPower(0);
-        }
+        pressedLastTime = gamepad1.a;
     }
 
     public void updateGrabber(){
         grabber.update(gamepad2.right_stick_y, gamepad2.b, gamepad2.a);
     }
-
-//    public void updateTransfer(){
-//        if(gamepad1.x){
-//            ElapsedTime timer = new ElapsedTime();
-//            double start = timer.milliseconds();
-//            transferServo.setPosition(1);
-//            if(timer.milliseconds() - start > 500){
-//                transferServo.setPosition(0);
-//            }
-//        }
-//        if (gamepad1.y) {
-//            transferMotor.setPower(1);
-//        }
-//        else{
-//            transferMotor.setPower(0);
-//        }
-//    }
 }

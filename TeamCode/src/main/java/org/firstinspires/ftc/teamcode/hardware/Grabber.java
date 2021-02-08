@@ -28,7 +28,11 @@ public class Grabber {
     }
 
     public void update(double power, boolean close, boolean open){
-        arm.setPower(Math.abs(power) * power * .4);
+        if (power == 0) arm.setPower(0);
+        else
+        {
+            arm.setPower(.2 + Math.abs(power) * power * .4);
+        }
         if(close){
             closeGrabber();
         }
