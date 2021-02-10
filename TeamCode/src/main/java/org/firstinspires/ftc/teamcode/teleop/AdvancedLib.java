@@ -222,6 +222,6 @@ public abstract class AdvancedLib extends OpMode {
     }
 
     public void updateGrabber(){
-        grabber.update(gamepad2.right_stick_y, gamepad2.b, gamepad2.a);
+        grabber.update(gamepad2.right_stick_y, gamepad2.a, gamepad2.y);
     }
 }
