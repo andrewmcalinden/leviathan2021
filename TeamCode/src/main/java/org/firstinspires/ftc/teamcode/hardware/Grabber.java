@@ -31,7 +31,7 @@ public class Grabber {
         if (power == 0) arm.setPower(0);
         else
         {
-            arm.setPower(.2 + Math.abs(power) * power * .4);
+            arm.setPower(-.1 + Math.abs(power) * power * .6);
         }
         if(close){
             closeGrabber();

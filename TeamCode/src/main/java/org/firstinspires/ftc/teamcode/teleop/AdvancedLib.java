@@ -113,7 +113,7 @@ public abstract class AdvancedLib extends OpMode {
     public void updateTranfer(){
         if (gamepad1.x && !servoPressedLastTime){
             if (servoPos == 0){
-                servoPos = .5;
+                servoPos = .35;
             }
             else{
                 servoPos = 0;
@@ -199,7 +199,7 @@ public abstract class AdvancedLib extends OpMode {
     }
 
     public void updateIntake(){
-        if(gamepad1.right_bumper){
+        if(gamepad1.left_bumper){
             intake.setPower(1);
         }
         else{
