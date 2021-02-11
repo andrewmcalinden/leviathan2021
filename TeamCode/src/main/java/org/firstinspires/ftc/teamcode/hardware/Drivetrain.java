@@ -35,40 +35,55 @@ public class Drivetrain  {
 
         timer = new ElapsedTime();
 
-        fR = opMode.hardwareMap.get(DcMotor.class, "fR");
-        fL = opMode.hardwareMap.get(DcMotor.class, "fL");
-        bR = opMode.hardwareMap.get(DcMotor.class, "bR");
-        bL = opMode.hardwareMap.get(DcMotor.class, "bL");
+        fR = this.opMode.hardwareMap.get(DcMotor.class, "fR");
+        fL = this.opMode.hardwareMap.get(DcMotor.class, "fL");
+        bR = this.opMode.hardwareMap.get(DcMotor.class, "bR");
+        bL = this.opMode.hardwareMap.get(DcMotor.class, "bL");
 
-//        fR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        fL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        bL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        bR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
         bL.setDirection(DcMotor.Direction.REVERSE);
+
+        fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
     }
 
     public void resetEncoder() {
         fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        opMode.idle();
         fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        opMode.idle();
         bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        opMode.idle();
         bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        opMode.idle();
+
+        fR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        opMode.idle();
+        fL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        opMode.idle();
+        bL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        opMode.idle();
+        bR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        opMode.idle();
 
         opMode.telemetry.addLine("Encoders has been reset!");
         opMode.telemetry.update();
     }
 
-    public void goStraight(double power, double inches) throws InterruptedException{
+    public void goStraight(double power, double inches){
         resetEncoder();
-        //double startAngle = gyro.getAngle();
         while (Math.abs(getTic() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
-            fR.setPower(power);
-            fL.setPower(power);
-            bR.setPower(power);
-            bL.setPower(-power);
+            startMotors(power, power, power, power);
             opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
             opMode.telemetry.update();
         }
@@ -111,11 +126,11 @@ public class Drivetrain  {
         return totaldis / count;
     }
 
-    public void startMotors(double leftPower, double rightPower) {
-        fR.setPower(rightPower);
-        fL.setPower(leftPower);
-        bL.setPower(leftPower);
-        bR.setPower(rightPower);
+    public void startMotors(double fl, double fr, double bl, double br) {
+        fR.setPower(fr);
+        fL.setPower(fl);
+        bL.setPower(-bl);
+        bR.setPower(br);
 
     }
 
@@ -178,10 +193,10 @@ public class Drivetrain  {
             power = Kp * proportional + Ki * integral + Kd * derivative;
 
             if(power < 0){
-                startMotors(power - f,-power + f);
+                startMotors(power - f,-power + f, power - f,-power + f);
             }
             else{
-                startMotors(power + f,-power - f);
+                startMotors(power + f,-power - f, power + f,-power - f);
             }
             pastError = error;
             pastTime = currentTime;
@@ -220,14 +235,14 @@ public class Drivetrain  {
             double difference = Math.abs(gyro.angleDiff(initialAngle));
             if(difference > 2) {
                 if(gyro.angleDiff(initialAngle) < 0){
-                    startMotors(power + f, (power + f) * .8);
+                    startMotors(power + f, (power + f) * .8, power + f, (power + f) * .8);
                 }
                 else{
-                    startMotors((power + f) * .8, power + f);
+                    startMotors((power + f) * .8, power + f, (power + f) * .8, power + f);
                 }
             }
             else{
-                startMotors(power + f, power + f);
+                startMotors(power + f, power + f, power + f, power + f);
             }
             pastError = error;
             pastTime = currentTime;

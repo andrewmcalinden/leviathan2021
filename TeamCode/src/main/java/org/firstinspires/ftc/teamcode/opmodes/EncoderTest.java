@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.math.Vector;
 @Autonomous(name = "encoder test", group = "18030")
 public class EncoderTest extends LinearOpMode {
 
-    public Drivetrain dt;
+    private Drivetrain dt;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -25,7 +25,10 @@ public class EncoderTest extends LinearOpMode {
 //            //stop();
 //        }
 
-        dt.startMotors(1, 1);
+        if (!isStopRequested()){
+            dt.startMotors(1, 1, 1, 1);
+        }
+
 
     }
 }
