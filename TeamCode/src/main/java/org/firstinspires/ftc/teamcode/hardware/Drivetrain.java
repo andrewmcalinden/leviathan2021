@@ -54,7 +54,6 @@ public class Drivetrain  {
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         bR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         bL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
     }
 
     public void resetEncoder() {
@@ -222,7 +221,7 @@ public class Drivetrain  {
         double integral = 0;
         double initialAngle = gyro.getAngle();
 
-        while(Math.abs(error) > .6){
+        while(Math.abs(error) > .6 && !opMode.isStopRequested()){
             error = inches - Math.abs(getTic() / COUNTS_PER_INCH);
             currentTime = timer.milliseconds();
             double dt = currentTime - pastTime;

@@ -17,7 +17,7 @@ public class AdvancedTeleop extends AdvancedLib {
         }
         updateIntake(); //hold left bumper gamepad1
         updateShooter(); //toggle a gamepad1
-        updateArm();
+        updateGrabber();
         updateTranfer();
     }
 }

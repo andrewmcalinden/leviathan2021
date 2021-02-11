@@ -57,7 +57,6 @@ public abstract class AdvancedLib extends OpMode {
         gyro = new Sensors(this);
 
         grabber = new Grabber(this);
-        armStartPos = grabber.getStartPos();
 
         transfer = hardwareMap.get(DcMotor.class, "transfer");
         transferServo = hardwareMap.get(Servo.class, "transferServo");
@@ -223,24 +222,8 @@ public abstract class AdvancedLib extends OpMode {
         }
         pressedLastTime = gamepad1.a;
     }
-    public void updateArm(){
-        double armPos_D = gamepad2.right_trigger;
-        double armCurrentPos = grabber.getCurrentPos();
-        if(Math.abs(armStartPos - armCurrentPos) < 2 && armPos_D < .1){
-            grabber.setArmPower(0);
-        }
-        else{
-            //This may or may not work, needs testing
-            //Look at my relic recovery code for troubleshooting
-            double newPos = armStartPos + 180 * armPos_D;
-            telemetry.addData("target:", newPos);
-            telemetry.update();
-            double powerVar = (Math.abs(newPos - armCurrentPos) / 100);
-            grabber.liftUp(newPos, (.05 * powerVar) + .2);
-        }
-    }
 
-//    public void updateGrabber(){
-//        grabber.update(gamepad2.right_stick_y, gamepad2.a, gamepad2.y);
-//    }
+    public void updateGrabber(){
+        grabber.update(gamepad2.left_stick_y, gamepad2.a, gamepad2.y, gamepad2.x);
+    }
 }

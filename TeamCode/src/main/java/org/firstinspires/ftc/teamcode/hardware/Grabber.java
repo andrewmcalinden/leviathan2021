@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static java.lang.Thread.sleep;
 
@@ -22,8 +23,9 @@ public class Grabber {
 
     public Grabber(LinearOpMode opMode){
         arm = opMode.hardwareMap.get(DcMotor.class, "arm");
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setDirection((DcMotor.Direction.FORWARD));
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         grabber = opMode.hardwareMap.servo.get("grabber");
         openGrabber();
@@ -31,8 +33,7 @@ public class Grabber {
         lastButtonPressed = false;
         open = false;
 
-        lastMacro = false;
-        up = false;
+        myOpmode = opMode;
     }
 
     public Grabber(OpMode opMode){
@@ -47,30 +48,22 @@ public class Grabber {
         lastButtonPressed = false;
         open = false;
 
-        lastMacro = false;
-        up = false;
-
         myOpmode = opMode;
     }
     //this is some cheese, should probably comment out
-    public void update(double power, boolean buttonPressed, boolean macro){
+    public void update(double power, boolean buttonPressed, boolean liftUp, boolean goToNeck){
         if (power == 0){
             arm.setPower(0);
-            if (macro && !lastMacro){
-                if (up){
-                    myOpmode.telemetry.addLine("going down");
-                    myOpmode.telemetry.update();
-                    putDown();
-                    up = false;
-                }
-                else{
-                    liftUp();
-                    myOpmode.telemetry.addLine("going up");
-                    myOpmode.telemetry.update();
-                    up = true;
-                }
+            if (liftUp){
+                liftUp();
+                myOpmode.telemetry.addLine("going up");
+                myOpmode.telemetry.update();
             }
-            lastMacro = macro;
+            if (goToNeck){
+                goToNeck();
+                myOpmode.telemetry.addLine("going to neck");
+                myOpmode.telemetry.update();
+            }
         }
         else{
             arm.setPower(-.1 + Math.abs(power) * power * .6);
@@ -91,16 +84,32 @@ public class Grabber {
         myOpmode.telemetry.update();
     }
 
-    public void liftUp(){
-        while(arm.getCurrentPosition() < startPos + 180){
-            arm.setPower(-.3);
+    public void liftUp(){ //-16 = start, -144 = up, -270 = neck
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        double target = startPos - 130; //-130
+        double error = arm.getCurrentPosition() - target;
+        double initialError = Math.abs(error); //130
+        while(Math.abs(error) > 5 && timer.seconds() < 2){
+            error = arm.getCurrentPosition() - target; //positive, starts at 130, goes closer to 0 over time
+            double p = error / initialError; //will be positive if starting from initialization
+            double f = p > 0 ? .07 : -.07;
+            arm.setPower(p * .25 + f); //was -.6
         }
         arm.setPower(0);
     }
 
-    public void putDown(){
-        while(arm.getCurrentPosition() > startPos){
-            arm.setPower(.1);
+    public void goToNeck(){
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        double target = startPos - 250; //-w50
+        double error = arm.getCurrentPosition() - target;
+        double initialError = Math.abs(error); //130
+        while(Math.abs(error) > 5 && timer.seconds() < 2){
+            error = arm.getCurrentPosition() - target; //positive, starts at 130, goes closer to 0 over time
+            double p = error / initialError; //will be positive if starting from initialization
+            double f = p > 0 ? .07 : -.07;
+            arm.setPower(p * .25 + f); //was -.6
         }
         arm.setPower(0);
     }

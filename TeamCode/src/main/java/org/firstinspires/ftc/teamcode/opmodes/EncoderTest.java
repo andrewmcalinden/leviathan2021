@@ -26,7 +26,7 @@ public class EncoderTest extends LinearOpMode {
 //        }
 
         if (!isStopRequested()){
-            dt.startMotors(1, 1, 1, 1);
+            dt.movePIDFGyro(50, .5, 0, 0, .1);
         }
 
 
