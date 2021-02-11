@@ -11,6 +11,8 @@ public class Grabber {
     public DcMotor arm;
     public Servo grabber;
 
+    public OpMode myOpmode;
+
     private double startPos;
     private boolean lastButtonPressed;
     private boolean open;
@@ -23,7 +25,7 @@ public class Grabber {
         arm.setDirection((DcMotor.Direction.FORWARD));
 
         grabber = opMode.hardwareMap.servo.get("grabber");
-        closeGrabber();
+        openGrabber();
         startPos = arm.getCurrentPosition();
         lastButtonPressed = false;
         open = false;
@@ -44,6 +46,8 @@ public class Grabber {
 
         lastMacro = false;
         up = false;
+
+        myOpmode = opMode;
     }
 
     public void update(double power, boolean buttonPressed, boolean macro){
@@ -51,11 +55,15 @@ public class Grabber {
             arm.setPower(0);
             if (macro && !lastMacro){
                 if (up){
+                    myOpmode.telemetry.addLine("going down");
+                    myOpmode.telemetry.update();
                     putDown();
                     up = false;
                 }
                 else{
                     liftUp();
+                    myOpmode.telemetry.addLine("going up");
+                    myOpmode.telemetry.update();
                     up = true;
                 }
             }
@@ -64,6 +72,7 @@ public class Grabber {
         else{
             arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             arm.setPower(-.1 + Math.abs(power) * power * .6);
+            myOpmode.telemetry.addData("power", -.1 + Math.abs(power) * power * .6);
         }
         if(buttonPressed && !lastButtonPressed){
             if (open){
@@ -76,12 +85,15 @@ public class Grabber {
             }
         }
         lastButtonPressed = buttonPressed;
+        myOpmode.telemetry.addData("position", arm.getCurrentPosition());
+        myOpmode.telemetry.update();
     }
 
     public void liftUp(){
-        double upPositon = startPos + 700;
+        double upPositon = startPos + 180;
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition((int) upPositon);
+        arm.setTargetPosition((int) -upPositon);
+        myOpmode.telemetry.addData("target:", upPositon);
         arm.setPower(.5);
     }
 
@@ -89,11 +101,12 @@ public class Grabber {
         double downPosition = startPos;
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition((int) downPosition);
+        myOpmode.telemetry.addData("target:", downPosition);
         arm.setPower(.5);
     }
 
     public void closeGrabber(){
-        grabber.setPosition(.2);
+        grabber.setPosition(.25);
     }
 
     public void openGrabber(){

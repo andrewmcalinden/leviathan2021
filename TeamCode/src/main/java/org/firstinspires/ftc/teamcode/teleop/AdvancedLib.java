@@ -97,12 +97,12 @@ public abstract class AdvancedLib extends OpMode {
             bl = (bl / max) * magnitude;
             br = (br / max) * magnitude;
         }
-        telemetry.addData("fl: ", fl);
-        telemetry.addData("fr: ", fr);
-        telemetry.addData("bl: ", bl);
-        telemetry.addData("br ", br);
-        telemetry.addData("heading", robotHeadingRad);
-        telemetry.update();
+//        telemetry.addData("fl: ", fl);
+//        telemetry.addData("fr: ", fr);
+//        telemetry.addData("bl: ", bl);
+//        telemetry.addData("br ", br);
+//        telemetry.addData("heading", robotHeadingRad);
+//        telemetry.update();
 
         fL.setPower(fl);
         fR.setPower(fr);
@@ -151,11 +151,11 @@ public abstract class AdvancedLib extends OpMode {
             bl = (bl / max) * magnitude;
             br = (br / max) * magnitude;
         }
-        telemetry.addData("fl: ", fl);
-        telemetry.addData("fr: ", fr);
-        telemetry.addData("bl: ", bl);
-        telemetry.addData("br ", br);
-        telemetry.update();
+//        telemetry.addData("fl: ", fl);
+//        telemetry.addData("fr: ", fr);
+//        telemetry.addData("bl: ", bl);
+//        telemetry.addData("br ", br);
+//        telemetry.update();
 
         fL.setPower(fl);
         fR.setPower(fr);
@@ -186,11 +186,11 @@ public abstract class AdvancedLib extends OpMode {
             bl = (bl / max) * magnitude;
             br = (br / max) * magnitude;
         }
-        telemetry.addData("fl: ", fl);
-        telemetry.addData("fr: ", fr);
-        telemetry.addData("bl: ", bl);
-        telemetry.addData("br ", br);
-        telemetry.update();
+//        telemetry.addData("fl: ", fl);
+//        telemetry.addData("fr: ", fr);
+//        telemetry.addData("bl: ", bl);
+//        telemetry.addData("br ", br);
+//        telemetry.update();
 
         fL.setPower(fl);
         fR.setPower(fr);

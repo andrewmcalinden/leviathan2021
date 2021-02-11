@@ -9,10 +9,15 @@ public class AdvancedTeleop extends AdvancedLib {
     public void loop(){
         //double robotHeadingRad = gyro.getAngle() * (Math.PI / 180);
         //fieldCentricMecanum(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, robotHeadingRad);
-        robotCentricAdditiveMecanum(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
-        updateIntake(); //hold right bumper gamepad1
-        updateShooter(); //toggle a and b gamepad1
-        updateGrabber(); //right stick y gamepad2
+        if (gamepad1.right_trigger != 0){
+            robotCentricAdditiveMecanum(gamepad1.left_stick_x * .5, -gamepad1.left_stick_y * .5, gamepad1.right_stick_x * .5);
+        }
+        else{
+            robotCentricAdditiveMecanum(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        }
+        updateIntake(); //hold left bumper gamepad1
+        updateShooter(); //toggle a gamepad1
+        updateGrabber(); //right stick y gamepad2, toggle a gamepad 2
         updateTranfer();
     }
 }
