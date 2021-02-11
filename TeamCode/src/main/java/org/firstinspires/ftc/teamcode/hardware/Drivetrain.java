@@ -40,10 +40,10 @@ public class Drivetrain  {
         bR = opMode.hardwareMap.get(DcMotor.class, "bR");
         bL = opMode.hardwareMap.get(DcMotor.class, "bL");
 
-        fR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        fL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        fR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        fL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        bL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        bR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
@@ -61,17 +61,20 @@ public class Drivetrain  {
         opMode.telemetry.update();
     }
 
-    public void goStraight(double power, double inches) {
+    public void goStraight(double power, double inches) throws InterruptedException{
         resetEncoder();
         //double startAngle = gyro.getAngle();
-        while (Math.abs(getTic() / COUNTS_PER_INCH) < inches) {
+        while (Math.abs(getTic() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
             fR.setPower(power);
             fL.setPower(power);
             bR.setPower(power);
             bL.setPower(-power);
+            opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
+            opMode.telemetry.update();
         }
         stopMotors();
     }
+
 
     public void stopMotors() {
         fR.setPower(0);
@@ -99,7 +102,7 @@ public class Drivetrain  {
         }
         double totaldis = fR.getCurrentPosition() + fL.getCurrentPosition() + bL.getCurrentPosition() + bR.getCurrentPosition();
         if (count == 0) {
-            return 0;
+            return 1;
         }
 
         opMode.telemetry.addData("Current tics",totaldis / count);

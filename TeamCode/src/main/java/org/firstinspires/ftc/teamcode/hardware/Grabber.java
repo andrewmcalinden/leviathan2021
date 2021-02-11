@@ -37,6 +37,7 @@ public class Grabber {
 
     public Grabber(OpMode opMode){
         arm = opMode.hardwareMap.get(DcMotor.class, "arm");
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setDirection((DcMotor.Direction.FORWARD));
 
         grabber = opMode.hardwareMap.servo.get("grabber");
@@ -98,7 +99,7 @@ public class Grabber {
         //probably want to either check if it is positive or negative.
         //also want to check if it is forward or reverse
         arm.setTargetPosition((int) -position);
-        myOpmode.telemetry.addData("target:", position);
+        myOpmode.telemetry.addData("currentPos:", position);
         //don't give direct power, kinda troll
         //arm.setPower(.5);
         arm.setPower(power);

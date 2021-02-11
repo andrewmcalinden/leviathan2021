@@ -20,6 +20,12 @@ public class EncoderTest extends LinearOpMode {
         waitForStart();
 
         //dt.movePIDFGyro(20, .8, 0, 0, .1 );
-        dt.goStraight(.6, 20);
+//        while (!isStopRequested()){
+//            dt.goStraight(.6, 20);
+//            //stop();
+//        }
+
+        dt.startMotors(1, 1);
+
     }
 }

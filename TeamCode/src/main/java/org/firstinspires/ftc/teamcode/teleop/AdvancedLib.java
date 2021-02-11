@@ -189,11 +189,11 @@ public abstract class AdvancedLib extends OpMode {
             bl = (bl / max) * magnitude;
             br = (br / max) * magnitude;
         }
-        telemetry.addData("fl: ", fL.getCurrentPosition());
-        telemetry.addData("fr: ", fR.getCurrentPosition());
-        telemetry.addData("bl: ", bL.getCurrentPosition());
-        telemetry.addData("br ", bR.getCurrentPosition());
-        telemetry.update();
+//        telemetry.addData("fl: ", fL.getCurrentPosition());
+//        telemetry.addData("fr: ", fR.getCurrentPosition());
+//        telemetry.addData("bl: ", bL.getCurrentPosition());
+//        telemetry.addData("br ", bR.getCurrentPosition());
+//        telemetry.update();
 
         fL.setPower(fl);
         fR.setPower(fr);
@@ -233,8 +233,10 @@ public abstract class AdvancedLib extends OpMode {
             //This may or may not work, needs testing
             //Look at my relic recovery code for troubleshooting
             double newPos = armStartPos + 180 * armPos_D;
+            telemetry.addData("target:", newPos);
+            telemetry.update();
             double powerVar = (Math.abs(newPos - armCurrentPos) / 100);
-            grabber.liftUp(newPos, (.5 * powerVar) + .2);
+            grabber.liftUp(newPos, (.05 * powerVar) + .2);
         }
     }
 
