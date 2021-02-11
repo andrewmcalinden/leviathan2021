@@ -21,8 +21,8 @@ public class Drivetrain  {
 
     ElapsedTime timer;
 
-    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
+    static final double COUNTS_PER_MOTOR_REV = 537.6;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -48,7 +48,7 @@ public class Drivetrain  {
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.FORWARD);
+        bL.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void resetEncoder() {
@@ -63,12 +63,12 @@ public class Drivetrain  {
 
     public void goStraight(double power, double inches) {
         resetEncoder();
-        double startAngle = gyro.getAngle();
+        //double startAngle = gyro.getAngle();
         while (Math.abs(getTic() / COUNTS_PER_INCH) < inches) {
             fR.setPower(power);
             fL.setPower(power);
             bR.setPower(power);
-            bL.setPower(power);
+            bL.setPower(-power);
         }
         stopMotors();
     }
