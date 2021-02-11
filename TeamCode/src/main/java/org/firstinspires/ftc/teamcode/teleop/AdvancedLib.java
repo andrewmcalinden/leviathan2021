@@ -45,7 +45,7 @@ public abstract class AdvancedLib extends OpMode {
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.FORWARD);
+        bL.setDirection(DcMotor.Direction.REVERSE);
 
         mtrShooter = hardwareMap.dcMotor.get("shooter");
         mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -106,7 +106,7 @@ public abstract class AdvancedLib extends OpMode {
 
         fL.setPower(fl);
         fR.setPower(fr);
-        bL.setPower(bl);
+        bL.setPower(-bl);
         bR.setPower(br);
     }
 
@@ -159,7 +159,7 @@ public abstract class AdvancedLib extends OpMode {
 
         fL.setPower(fl);
         fR.setPower(fr);
-        bL.setPower(bl);
+        bL.setPower(-bl);
         bR.setPower(br);
     }
 
@@ -186,15 +186,15 @@ public abstract class AdvancedLib extends OpMode {
             bl = (bl / max) * magnitude;
             br = (br / max) * magnitude;
         }
-//        telemetry.addData("fl: ", fl);
-//        telemetry.addData("fr: ", fr);
-//        telemetry.addData("bl: ", bl);
-//        telemetry.addData("br ", br);
-//        telemetry.update();
+        telemetry.addData("fl: ", fL.getCurrentPosition());
+        telemetry.addData("fr: ", fR.getCurrentPosition());
+        telemetry.addData("bl: ", bL.getCurrentPosition());
+        telemetry.addData("br ", bR.getCurrentPosition());
+        telemetry.update();
 
         fL.setPower(fl);
         fR.setPower(fr);
-        bL.setPower(bl);
+        bL.setPower(-bl);
         bR.setPower(br);
     }
 
