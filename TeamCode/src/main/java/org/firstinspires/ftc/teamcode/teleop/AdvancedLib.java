@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,7 +25,7 @@ public abstract class AdvancedLib extends OpMode {
 
     public Grabber grabber;
 
-    public DcMotor mtrShooter;
+    public DcMotorEx mtrShooter;
     public DcMotor transfer;
 
     public Servo transferServo;
@@ -48,8 +49,10 @@ public abstract class AdvancedLib extends OpMode {
         bR.setDirection(DcMotor.Direction.FORWARD);
         bL.setDirection(DcMotor.Direction.REVERSE);
 
-        mtrShooter = hardwareMap.dcMotor.get("shooter");
+        mtrShooter = hardwareMap.get(DcMotorEx.class, "shooter");
         mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        mtrShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mtrShooter.setVelocityPIDFCoefficients(2.37442, 0.237442, 0, 23.7442);
 
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection((DcMotor.Direction.REVERSE));
@@ -212,15 +215,17 @@ public abstract class AdvancedLib extends OpMode {
     public void updateShooter(){
         if (gamepad1.a && !pressedLastTime){
             if (mtrPower == 0){
-                mtrPower = 1;
+                mtrPower = 1380;
             }
             else{
                 mtrPower = 0;
             }
-            mtrShooter.setPower(mtrPower);
+            mtrShooter.setVelocity(mtrPower);
             transfer.setPower(mtrPower);
         }
         pressedLastTime = gamepad1.a;
+        telemetry.addData("velo:", mtrShooter.getVelocity());
+        telemetry.update();
     }
 
     public void updateGrabber(){

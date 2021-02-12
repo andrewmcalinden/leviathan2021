@@ -102,7 +102,7 @@ public class Grabber {
     public void goToNeck(){
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
-        double target = startPos - 250; //-w50
+        double target = startPos - 250; //-250
         double error = arm.getCurrentPosition() - target;
         double initialError = Math.abs(error); //130
         while(Math.abs(error) > 5 && timer.seconds() < 2){
@@ -110,6 +110,21 @@ public class Grabber {
             double p = error / initialError; //will be positive if starting from initialization
             double f = p > 0 ? .07 : -.07;
             arm.setPower(p * .25 + f); //was -.6
+        }
+        arm.setPower(0);
+    }
+
+    public void deployWobble(){
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+        double target = startPos - 300; //-300
+        double error = arm.getCurrentPosition() - target;
+        double initialError = Math.abs(error); //130
+        while(Math.abs(error) > 5 && timer.seconds() < 2){
+            error = arm.getCurrentPosition() - target; //positive, starts at 130, goes closer to 0 over time
+            double p = error / initialError; //will be positive if starting from initialization
+            double f = p > 0 ? .07 : -.07;
+            arm.setPower(p * .45  + f); //was -.6
         }
         arm.setPower(0);
     }

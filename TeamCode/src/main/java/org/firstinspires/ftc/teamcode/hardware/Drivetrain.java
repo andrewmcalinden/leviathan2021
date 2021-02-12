@@ -89,6 +89,16 @@ public class Drivetrain  {
         stopMotors();
     }
 
+    public void strafeInches(double power, double inches){
+        resetEncoder();
+        while (Math.abs(getTicStrafeRight() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
+            startMotors(power, -power, -power, power);
+            opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
+            opMode.telemetry.update();
+        }
+        stopMotors();
+    }
+
 
     public void stopMotors() {
         fR.setPower(0);
@@ -115,6 +125,31 @@ public class Drivetrain  {
             count -= 1.0;
         }
         double totaldis = fR.getCurrentPosition() + fL.getCurrentPosition() + bL.getCurrentPosition() + bR.getCurrentPosition();
+        if (count == 0) {
+            return 1;
+        }
+
+        opMode.telemetry.addData("Current tics",totaldis / count);
+        opMode.telemetry.update();
+
+        return totaldis / count;
+    }
+
+    public double getTicStrafeRight(){
+        double count = 4;
+        if (fR.getCurrentPosition() == 0) {
+            count -= 1.0;
+        }
+        if (fL.getCurrentPosition() == 0) {
+            count -= 1.0;
+        }
+        if (bR.getCurrentPosition() == 0) {
+            count -= 1.0;
+        }
+        if (bL.getCurrentPosition() == 0) {
+            count -= 1.0;
+        }
+        double totaldis = -fR.getCurrentPosition() + fL.getCurrentPosition() - bL.getCurrentPosition() + bR.getCurrentPosition();
         if (count == 0) {
             return 1;
         }
@@ -203,6 +238,7 @@ public class Drivetrain  {
         stopMotors();
     }
 
+    //doesnt work, need to take into account going backwards
     public void movePIDFGyro(double inches, double p, double i, double d, double f){
         resetEncoder();
         timer.reset();
@@ -213,7 +249,7 @@ public class Drivetrain  {
 
         double pastTime = 0;
         double currentTime = timer.milliseconds();
-        double startPosition = getTic();
+        double startPosition = getTic() / COUNTS_PER_INCH;
         double diffInches = inches - startPosition;
         double pastError = inches;
         double error = pastError;
@@ -222,7 +258,7 @@ public class Drivetrain  {
         double initialAngle = gyro.getAngle();
 
         while(Math.abs(error) > .6 && !opMode.isStopRequested()){
-            error = inches - Math.abs(getTic() / COUNTS_PER_INCH);
+            error = inches - getTic() / COUNTS_PER_INCH;
             currentTime = timer.milliseconds();
             double dt = currentTime - pastTime;
 
