@@ -56,18 +56,13 @@ public class Grabber {
             arm.setPower(0);
             if (liftUp){
                 liftUp();
-                myOpmode.telemetry.addLine("going up");
-                myOpmode.telemetry.update();
             }
             if (goToNeck){
                 goToNeck();
-                myOpmode.telemetry.addLine("going to neck");
-                myOpmode.telemetry.update();
             }
         }
         else{
             arm.setPower(-.1 + Math.abs(power) * power * .6);
-            myOpmode.telemetry.addData("power", -.1 + Math.abs(power) * power * .6);
         }
         if(buttonPressed && !lastButtonPressed){
             if (open){
@@ -80,8 +75,6 @@ public class Grabber {
             }
         }
         lastButtonPressed = buttonPressed;
-        myOpmode.telemetry.addData("position", arm.getCurrentPosition());
-        myOpmode.telemetry.update();
     }
 
     public void liftUp(){ //-16 = start, -144 = up, -270 = neck

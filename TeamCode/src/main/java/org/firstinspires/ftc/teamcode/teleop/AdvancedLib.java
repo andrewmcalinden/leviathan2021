@@ -66,7 +66,8 @@ public abstract class AdvancedLib extends OpMode {
 
         pressedLastTime = false;
         mtrPower = 0;
-        
+
+        transferServo.setPosition(.35);
 
         servoPos = 0;
         servoPressedLastTime = false;
@@ -115,13 +116,18 @@ public abstract class AdvancedLib extends OpMode {
         bR.setPower(br);
     }
 
-    public void updateTranfer(){
+    public void updateTransfer(){
         if (gamepad1.x && !servoPressedLastTime){
             if (servoPos == 0){
                 servoPos = .35;
+                telemetry.clear();
+                telemetry.addLine("safe to use servo :)");
+                telemetry.update();
             }
             else{
                 servoPos = 0;
+                telemetry.addLine("DONT USE SERVO, YOU HAVE TO RESET IT");
+                telemetry.update();
             }
             transferServo.setPosition(servoPos);
         }
@@ -224,9 +230,38 @@ public abstract class AdvancedLib extends OpMode {
             transfer.setPower(mtrPower);
         }
         pressedLastTime = gamepad1.a;
-        telemetry.addData("velo:", mtrShooter.getVelocity());
-        telemetry.update();
     }
+
+    public void updateShooterShaan(){
+        if (gamepad1.right_bumper){
+            mtrShooter.setVelocity(1380);
+            transfer.setPower(1);
+        }
+        else{
+            mtrShooter.setVelocity(0);
+            transfer.setPower(0);
+        }
+    }
+
+    public void updateTransferShaan(){
+        if (gamepad1.a && !servoPressedLastTime){
+            if (servoPos == 0){
+                servoPos = .35;
+                telemetry.clear();
+                telemetry.addLine("safe to use servo :)");
+                telemetry.update();
+            }
+            else{
+                servoPos = 0;
+                telemetry.addLine("DONT USE SERVO, YOU HAVE TO RESET IT");
+                telemetry.update();
+            }
+            transferServo.setPosition(servoPos);
+        }
+        servoPressedLastTime = gamepad1.a;
+    }
+
+
 
     public void updateGrabber(){
         grabber.update(gamepad2.left_stick_y, gamepad2.a, gamepad2.y, gamepad2.x);

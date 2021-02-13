@@ -41,7 +41,7 @@ public class BlueMidGoalWobble extends LinearOpMode {
         if (!isStopRequested()){
             dt.goStraight(.35, 63);
             dt.strafeInches(.5, 30);
-            for (int i = 0; i < 5; i++){
+            for (int i = 0; i < 10; i++){
                 mtrShooter.setVelocity(1380);
                 transfer.setPower(1);
                 ElapsedTime timer = new ElapsedTime();
