@@ -77,7 +77,7 @@ public abstract class AdvancedLib extends OpMode {
 
     //angle must be measured counterclockwise from x axis
     public void fieldCentricMecanum(double x, double y, double turn, double robotHeadingRad){
-        robotHeadingRad -= FinalHeading.finalHeading; //might need to add
+        robotHeadingRad -= FinalHeading.finalHeading * (Math.PI / 180.0); //might need to add
 
         Vector movement = new Vector(x, y);
         movement = movement.rotated(-robotHeadingRad);
