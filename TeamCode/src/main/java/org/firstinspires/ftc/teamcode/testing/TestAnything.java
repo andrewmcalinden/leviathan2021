@@ -27,22 +27,16 @@ public class TestAnything extends LinearOpMode {
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.FORWARD);
+        bL.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
 
-        ElapsedTime timer = new ElapsedTime();
-
-        while (timer.milliseconds() < 2000){
-            fL.setPower(.5);
-            fR.setPower(.5);
-            bL.setPower(.5);
-            bR.setPower(.5);
+        while (!isStopRequested()){
+            telemetry.addData("fl", fL.getCurrentPosition());
+            telemetry.addData("fr", fR.getCurrentPosition());
+            telemetry.addData("bl", bL.getCurrentPosition());
+            telemetry.addData("br", bR.getCurrentPosition());
+            telemetry.update();
         }
-
-        fL.setPower(0);
-        fR.setPower(0);
-        bL.setPower(0);
-        bR.setPower(0);
     }
 }

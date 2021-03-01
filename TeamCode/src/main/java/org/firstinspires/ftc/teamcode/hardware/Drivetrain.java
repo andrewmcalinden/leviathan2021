@@ -45,10 +45,11 @@ public class Drivetrain  {
         bL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        //dont question reversals, they just work :)
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.REVERSE);
+        bL.setDirection(DcMotor.Direction.FORWARD);
 
         fR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         fL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -124,7 +125,7 @@ public class Drivetrain  {
         if (bL.getCurrentPosition() == 0) {
             count -= 1.0;
         }
-        double totaldis = fR.getCurrentPosition() + fL.getCurrentPosition() + bL.getCurrentPosition() + bR.getCurrentPosition();
+        double totaldis = Math.abs(fR.getCurrentPosition()) + Math.abs(fL.getCurrentPosition()) + Math.abs(bL.getCurrentPosition()) + Math.abs(bR.getCurrentPosition());
         if (count == 0) {
             return 1;
         }

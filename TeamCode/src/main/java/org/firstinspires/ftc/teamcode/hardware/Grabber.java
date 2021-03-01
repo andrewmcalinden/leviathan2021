@@ -125,6 +125,7 @@ public class Grabber {
     public void closeGrabber(){
         grabber.setPosition(.25);
     }
+
     public void openGrabber(){
         grabber.setPosition(.4);
     }

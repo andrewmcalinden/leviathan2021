@@ -44,10 +44,11 @@ public abstract class AdvancedLib extends OpMode {
         bL = hardwareMap.get(DcMotor.class, "bL");
         bR = hardwareMap.get(DcMotor.class, "bR");
 
+        //dont question reversals, they just work :)
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.REVERSE);
+        bL.setDirection(DcMotor.Direction.FORWARD);
 
         mtrShooter = hardwareMap.get(DcMotorEx.class, "shooter");
         mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -170,7 +171,7 @@ public abstract class AdvancedLib extends OpMode {
 
         fL.setPower(fl);
         fR.setPower(fr);
-        bL.setPower(-bl);
+        bL.setPower(bl);
         bR.setPower(br);
     }
 
