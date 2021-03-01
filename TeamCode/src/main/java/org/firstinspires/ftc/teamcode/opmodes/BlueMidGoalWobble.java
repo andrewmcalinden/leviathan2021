@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Grabber;
+import org.firstinspires.ftc.teamcode.FinalHeading;
 
 @Autonomous(name = "blue wobble mid", group = "18030")
 public class BlueMidGoalWobble extends LinearOpMode {
@@ -60,6 +61,8 @@ public class BlueMidGoalWobble extends LinearOpMode {
             mtrShooter.setVelocity(0);
             transfer.setPower(0);
             dt.goStraight(.3, 8);
+            FinalHeading.finalHeading = dt.gyro.getAngle();
+            stop();
         }
     }
 }

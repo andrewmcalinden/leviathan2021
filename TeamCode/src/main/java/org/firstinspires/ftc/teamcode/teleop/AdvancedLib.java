@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.FinalHeading;
 import org.firstinspires.ftc.teamcode.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.hardware.Sensors;
 import org.firstinspires.ftc.teamcode.hardware.Shooter;
@@ -76,6 +77,8 @@ public abstract class AdvancedLib extends OpMode {
 
     //angle must be measured counterclockwise from x axis
     public void fieldCentricMecanum(double x, double y, double turn, double robotHeadingRad){
+        robotHeadingRad -= FinalHeading.finalHeading; //might need to add
+
         Vector movement = new Vector(x, y);
         movement = movement.rotated(-robotHeadingRad);
         double rightX = turn;

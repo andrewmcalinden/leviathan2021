@@ -17,7 +17,7 @@ public class Drivetrain  {
 
     LinearOpMode opMode;
 
-    Sensors gyro;
+    public Sensors gyro;
 
     ElapsedTime timer;
 
