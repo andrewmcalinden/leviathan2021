@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.FinalHeading;
 
-@Autonomous(name = "blue wobble mid", group = "18030")
-public class BlueMidGoalWobble extends LinearOpMode {
+@Autonomous(name = "red auto", group = "18030")
+public class RedAuto extends LinearOpMode {
     private Drivetrain dt;
     private Grabber grabber;
 
@@ -60,7 +60,29 @@ public class BlueMidGoalWobble extends LinearOpMode {
             }
             mtrShooter.setVelocity(0);
             transfer.setPower(0);
-            dt.movePIDFGyro(8, .4, 0, 0, .1);
+
+            //hopefully we land in zone b
+            dt.movePIDFGyro(30, .4, 0, 0, .1);
+
+            /*
+            Cheese way to do it without turns or backing up(try this out if you want)
+            Case 1 (A):
+                dt.strafeInches(.5, 30)
+                grabber.deployWobble();
+                dt.strafeInches(-.5, 30)
+                dt.goStraight(-.5, 30)
+            Case 2(B):
+                dt.turnPIDF(-180, .3, 0, 0, .1);
+                grabber.deployWobble();
+                dt.movePIDFGyro(30, .4, 0, 0, .1);
+            Case 3(C):
+                dt.movePIDFGyro(6, .4, 0, 0, .1);
+                dt.turnPIDF(-180, .3, 0, 0, .1);
+                dt.strafeInches(-.5, 30)
+                grabber.deployWobble();
+                dt.movePIDFGyro(36, .4, 0, 0, .1);
+            */
+
             FinalHeading.finalHeading = dt.gyro.getAngle();
             stop();
         }
