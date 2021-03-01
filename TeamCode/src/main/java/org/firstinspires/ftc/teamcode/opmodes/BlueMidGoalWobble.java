@@ -40,7 +40,7 @@ public class BlueMidGoalWobble extends LinearOpMode {
         waitForStart();
 
         if (!isStopRequested()){
-            dt.goStraight(.35, 63);
+            dt.movePIDFGyro(63, .8, 0, 0, .1);
             dt.strafeInches(.5, 30);
             for (int i = 0; i < 10; i++){
                 mtrShooter.setVelocity(1380);
@@ -60,7 +60,7 @@ public class BlueMidGoalWobble extends LinearOpMode {
             }
             mtrShooter.setVelocity(0);
             transfer.setPower(0);
-            dt.goStraight(.3, 8);
+            dt.movePIDFGyro(8, .4, 0, 0, .1);
             FinalHeading.finalHeading = dt.gyro.getAngle();
             stop();
         }
