@@ -30,52 +30,60 @@ public class RedAuto extends LinearOpMode {
         mtrShooter = hardwareMap.get(DcMotorEx.class, "shooter");
         mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mtrShooter.setVelocityPIDFCoefficients(2.87442, 0.287442, 0, 28.7442);
 
         transfer = hardwareMap.get(DcMotor.class, "transfer");
         transferServo = hardwareMap.get(Servo.class, "transferServo");
 
         grabber.closeGrabber();
-        transferServo.setPosition(.35);
+        transferServo.setPosition(.45);
         waitForStart();
 
-        if (!isStopRequested()){
-            dt.movePIDFGyro(63, .8, 0, 0, .1);
-            dt.strafeInches(.5, 30);
-            for (int i = 0; i < 10; i++){
-                mtrShooter.setVelocity(1380);
+        while (!isStopRequested()){
+            dt.movePIDFGyro(63, .8, 0, 0, .14);
+            dt.strafeRightGyro(.5, 20);
+            dt.turnHeading(20, .3, 0, 0, .14);
+            for (int i = 0; i < 4; i++){
+                mtrShooter.setPower(1);
                 transfer.setPower(1);
                 ElapsedTime timer = new ElapsedTime();
                 timer.reset();
-                while (timer.seconds()  < 2){
+                while (timer.seconds() < 2 && !isStopRequested()){
                     //do nothing
-                    telemetry.addData("velocity", mtrShooter.getVelocity());
+                    telemetry.addLine("we chilling");
                     telemetry.update();
                 }
                 transferServo.setPosition(0);
                 sleep(300);
-                transferServo.setPosition(.35);
-                telemetry.addData("velocity", mtrShooter.getVelocity());
-                telemetry.update();
+                transferServo.setPosition(.45);
             }
-            mtrShooter.setVelocity(0);
+            mtrShooter.setPower(0);
             transfer.setPower(0);
 
+            dt.turnHeading(0, .3, 0, 0, .14); //turn to 0 degrees
+
             //hopefully we land in zone b
-            dt.movePIDFGyro(30, .4, 0, 0, .1);
+            dt.movePIDFGyro(47, .6, 0, 0, .14);
+
+            //case A
+            dt.strafeRightGyro(.5, 30);
+            dt.turnHeading(0, .3, 0, 0, .14); //turn to 0 degrees
+            grabber.deployWobble();
+            sleep(500);
+            dt.strafeLeftGyro(.5, 30);
+            dt.movePIDFGyro(-60, .7, 0, 0, .14);
 
             /*
             Cheese way to do it without turns or backing up(try this out if you want)
-            Case 1 (A):
+            Case 0 (A):
                 dt.strafeInches(.5, 30)
                 grabber.deployWobble();
                 dt.strafeInches(-.5, 30)
                 dt.goStraight(-.5, 30)
-            Case 2(B):
+            Case 1(B):
                 dt.turnPIDF(-180, .3, 0, 0, .1);
                 grabber.deployWobble();
                 dt.movePIDFGyro(30, .4, 0, 0, .1);
-            Case 3(C):
+            Case 4(C):
                 dt.movePIDFGyro(6, .4, 0, 0, .1);
                 dt.turnPIDF(-180, .3, 0, 0, .1);
                 dt.strafeInches(-.5, 30)
@@ -84,7 +92,8 @@ public class RedAuto extends LinearOpMode {
             */
 
             FinalHeading.finalHeading = dt.gyro.getAngle();
-            stop();
+            break;
         }
+        stop();
     }
 }

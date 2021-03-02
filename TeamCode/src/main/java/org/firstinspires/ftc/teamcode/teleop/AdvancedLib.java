@@ -49,12 +49,11 @@ public abstract class AdvancedLib extends OpMode {
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.FORWARD);
+        bL.setDirection(DcMotor.Direction.REVERSE);
 
         mtrShooter = hardwareMap.get(DcMotorEx.class, "shooter");
         mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
         mtrShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mtrShooter.setVelocityPIDFCoefficients(2.37442, 0.237442, 0, 23.7442);
 
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection((DcMotor.Direction.REVERSE));
@@ -69,7 +68,7 @@ public abstract class AdvancedLib extends OpMode {
         pressedLastTime = false;
         mtrPower = 0;
 
-        transferServo.setPosition(.35);
+        transferServo.setPosition(.45);
 
         servoPos = 0;
         servoPressedLastTime = false;
@@ -116,14 +115,14 @@ public abstract class AdvancedLib extends OpMode {
 
         fL.setPower(fl);
         fR.setPower(fr);
-        bL.setPower(-bl);
+        bL.setPower(bl);
         bR.setPower(br);
     }
 
     public void updateTransfer(){
         if (gamepad1.x && !servoPressedLastTime){
             if (servoPos == 0){
-                servoPos = .35;
+                servoPos = .45;
                 telemetry.clear();
                 telemetry.addLine("safe to use servo :)");
                 telemetry.update();
@@ -209,13 +208,14 @@ public abstract class AdvancedLib extends OpMode {
 
         fL.setPower(fl);
         fR.setPower(fr);
-        bL.setPower(-bl);
+        bL.setPower(bl);
         bR.setPower(br);
     }
 
     public void updateIntake(){
         if(gamepad1.left_bumper){
             intake.setPower(1);
+            transferServo.setPosition(.45);
         }
         else{
             intake.setPower(0);
@@ -225,12 +225,12 @@ public abstract class AdvancedLib extends OpMode {
     public void updateShooter(){
         if (gamepad1.a && !pressedLastTime){
             if (mtrPower == 0){
-                mtrPower = 1380;
+                mtrPower = 1;
             }
             else{
                 mtrPower = 0;
             }
-            mtrShooter.setVelocity(mtrPower);
+            mtrShooter.setPower(mtrPower);
             transfer.setPower(mtrPower);
         }
         pressedLastTime = gamepad1.a;
@@ -238,11 +238,11 @@ public abstract class AdvancedLib extends OpMode {
 
     public void updateShooterShaan(){
         if (gamepad1.right_bumper){
-            mtrShooter.setVelocity(1380);
+            mtrShooter.setPower(1);
             transfer.setPower(1);
         }
         else{
-            mtrShooter.setVelocity(0);
+            mtrShooter.setPower(0);
             transfer.setPower(0);
         }
     }
@@ -250,7 +250,7 @@ public abstract class AdvancedLib extends OpMode {
     public void updateTransferShaan(){
         if (gamepad1.a && !servoPressedLastTime){
             if (servoPos == 0){
-                servoPos = .35;
+                servoPos = .45;
                 telemetry.clear();
                 telemetry.addLine("safe to use servo :)");
                 telemetry.update();

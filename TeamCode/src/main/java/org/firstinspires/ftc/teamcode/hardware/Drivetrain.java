@@ -90,10 +90,56 @@ public class Drivetrain  {
         stopMotors();
     }
 
-    public void strafeInches(double power, double inches){
+    public void strafeInches(double power, double inches){ //goes right
         resetEncoder();
         while (Math.abs(getTicStrafeRight() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
             startMotors(power, -power, -power, power);
+            opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
+            opMode.telemetry.update();
+        }
+        stopMotors();
+    }
+
+    public void strafeRightGyro(double power, double inches){
+        double initialAngle = gyro.getAngle();
+        resetEncoder();
+        while (Math.abs(getTic() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
+            double angleDiff = Math.abs(gyro.getAngle() - initialAngle);
+            if (angleDiff < -1){
+                startMotors(power * 1.2, -power * 1.2, -power * .8, power * .8);
+                opMode.telemetry.addData("turning left", gyro.getAngle());
+            }
+            else if (angleDiff > 1){
+                startMotors(power * 1.2, -power * 1.2, -power * .8, power * .8);
+                opMode.telemetry.addData("turning right", gyro.getAngle());
+            }
+            else{
+                startMotors(power, -power, -power, power);
+            }
+
+            opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
+            opMode.telemetry.update();
+        }
+        stopMotors();
+    }
+
+    public void strafeLeftGyro(double power, double inches){
+        double initialAngle = gyro.getAngle();
+        resetEncoder();
+        while (Math.abs(getTic() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
+            double angleDiff = Math.abs(gyro.getAngle() - initialAngle);
+            if (angleDiff > 1){
+                startMotors(-power * 1.2, power * 1.2, power * .8, -power * .8);
+                opMode.telemetry.addData("turning left", gyro.getAngle());
+            }
+            else if (angleDiff < -1){
+                startMotors(-power * 1.2, power * 1.2, power * .8, -power * .8);
+                opMode.telemetry.addData("turning right", gyro.getAngle());
+            }
+            else{
+                startMotors(power, -power, -power, power);
+            }
+
             opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
             opMode.telemetry.update();
         }
@@ -130,8 +176,8 @@ public class Drivetrain  {
             return 1;
         }
 
-        opMode.telemetry.addData("Current tics",totaldis / count);
-        opMode.telemetry.update();
+//        opMode.telemetry.addData("Current tics",totaldis / count);
+//        opMode.telemetry.update();
 
         return totaldis / count;
     }
@@ -164,42 +210,43 @@ public class Drivetrain  {
     public void startMotors(double fl, double fr, double bl, double br) {
         fR.setPower(fr);
         fL.setPower(fl);
-        bL.setPower(-bl);
+        bL.setPower(bl);
         bR.setPower(br);
 
     }
 
-    public void turnDeg(double deg, double power, boolean right) {
-        double currentdeg = gyro.getAngle();
-        double target = currentdeg + deg;
-        if (right == true) {
-            while (gyro.getAngle() < target) {
-                fR.setPower(-power);
-                bR.setPower(-power);
-                fL.setPower(power);
-                bL.setPower(power);
-            }
-        }
-        if (right == false) {
-            while (gyro.getAngle() > target) {
-                fR.setPower(power);
-                bR.setPower(power);
-                fL.setPower(-power);
-                bL.setPower(-power);
-            }
-        }
-        stopMotors();
-    }
+//    public void turnDeg(double deg, double power, boolean right) {
+//        double currentdeg = gyro.getAngle();
+//        double target = currentdeg + deg;
+//        if (right == true) {
+//            while (gyro.getAngle() < target) {
+//                fR.setPower(-power);
+//                bR.setPower(-power);
+//                fL.setPower(power);
+//                bL.setPower(power);
+//            }
+//        }
+//        if (right == false) {
+//            while (gyro.getAngle() > target) {
+//                fR.setPower(power);
+//                bR.setPower(power);
+//                fL.setPower(-power);
+//                bL.setPower(-power);
+//            }
+//        }
+//        stopMotors();
+//    }
+//
+//    public void turnHeading(double heading, double power) {
+//        double distance = gyro.angleDiff(heading);
+//        if (distance > 0) {
+//            turnDeg(distance, power, true);
+//        } else {
+//            turnDeg(distance, power, false);
+//        }
+//    }
 
-    public void turnHeading(double heading, double power) {
-        double distance = gyro.angleDiff(heading);
-        if (distance > 0) {
-            turnDeg(distance, power, true);
-        } else {
-            turnDeg(distance, power, false);
-        }
-    }
-
+    //doesnt work
     public void turnPIDF(double angle, double p, double i, double d, double f){
         timer.reset();
 
@@ -211,13 +258,13 @@ public class Drivetrain  {
         double currentTime = timer.milliseconds();
         double startAngle = gyro.getAngle();
         double angleDiff = angle - startAngle;
-        double pastError = gyro.angleDiff(angle);
+        double pastError = Math.abs(gyro.angleDiff(angle));
         double error = pastError;
         double power = 0;
         double integral = 0;
 
-        while(Math.abs(error) > .6){
-            error = gyro.angleDiff(angle);
+        while(error > .6 && !opMode.isStopRequested()){
+            error = Math.abs(gyro.angleDiff(angle));
             currentTime = timer.milliseconds();
             double dt = currentTime - pastTime;
 
@@ -227,16 +274,77 @@ public class Drivetrain  {
 
             power = Kp * proportional + Ki * integral + Kd * derivative;
 
-            if(power < 0){
-                startMotors(power - f,-power + f, power - f,-power + f);
+            if(power < 0){ //something wrong with negatives here
+                startMotors(-power - f,power + f, -power - f,power + f);
             }
             else{
-                startMotors(power + f,-power - f, power + f,-power - f);
+                startMotors(-power + f,power - f, -power + f,power - f);
             }
             pastError = error;
             pastTime = currentTime;
+
+            opMode.telemetry.addData("error", error);
+            opMode.telemetry.addData("power", power);
+            opMode.telemetry.addData("angle", gyro.getAngle());
+            opMode.telemetry.update();
         }
         stopMotors();
+    }
+
+    double angleWrapDeg(double angle)
+    {
+        double correctAngle = angle;
+        while (correctAngle > 180)
+        {
+            correctAngle -= 360;
+        }
+        while (correctAngle < -180)
+        {
+            correctAngle += 360;
+        }
+        return correctAngle;
+    }
+
+    public void turnHeading(double finalAngle, double kp, double ki, double kd, double f)
+    {
+        ElapsedTime timer = new ElapsedTime();
+
+        double pastTime = 0;
+        double currentTime = timer.milliseconds();
+
+        double initialHeading = gyro.getAngle();
+        finalAngle = angleWrapDeg(finalAngle);
+
+        double initialAngleDiff = angleWrapDeg(initialHeading - finalAngle);
+        double error = gyro.newAngleDiff(gyro.getAngle(), finalAngle);
+        double pastError = error;
+
+        double integral = 0;
+
+        while (Math.abs(error) > 2)
+        {
+            error = gyro.newAngleDiff(gyro.getAngle(), finalAngle);
+
+            currentTime = timer.milliseconds();
+            double dt = currentTime - pastTime;
+
+            double proportional = error / Math.abs(initialAngleDiff);
+            integral += dt * ((error + pastError) / 2.0);
+            double derivative = (error - pastError) / dt;
+
+            double power = kp * proportional + ki * integral + kd * derivative;
+            if (power > 0)
+            {
+                startMotors(-power - f, power + f, -power - f, power + f);
+            }
+            else
+            {
+                startMotors(-power + f, power - f, -power + f, power - f);
+            }
+            pastTime = currentTime;
+            pastError = error;
+        }
+        startMotors(0, 0, 0, 0);
     }
 
     //doesnt work, need to take into account going backwards
@@ -259,7 +367,8 @@ public class Drivetrain  {
         double initialAngle = gyro.getAngle();
 
         while(Math.abs(error) > .6 && !opMode.isStopRequested()){
-            error = inches - getTic() / COUNTS_PER_INCH;
+            double tic = inches > 0 ? getTic() : -getTic();
+            error = inches - tic / COUNTS_PER_INCH;
             currentTime = timer.milliseconds();
             double dt = currentTime - pastTime;
 

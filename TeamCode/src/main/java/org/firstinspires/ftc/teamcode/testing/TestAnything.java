@@ -12,31 +12,18 @@ import org.firstinspires.ftc.teamcode.math.Vector;
 @Autonomous(name = "test anything", group = "18030")
 public class TestAnything extends LinearOpMode {
 
-    public DcMotor fL;
-    public DcMotor fR;
-    public DcMotor bL;
-    public DcMotor bR;
+    Drivetrain dt;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        fL = hardwareMap.get(DcMotor.class, "fL");
-        fR = hardwareMap.get(DcMotor.class, "fR");
-        bL = hardwareMap.get(DcMotor.class, "bL");
-        bR = hardwareMap.get(DcMotor.class, "bR");
-
-        fR.setDirection(DcMotor.Direction.FORWARD);
-        fL.setDirection(DcMotor.Direction.REVERSE);
-        bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.REVERSE);
+        dt = new Drivetrain(this);
 
         waitForStart();
 
         while (!isStopRequested()){
-            telemetry.addData("fl", fL.getCurrentPosition());
-            telemetry.addData("fr", fR.getCurrentPosition());
-            telemetry.addData("bl", bL.getCurrentPosition());
-            telemetry.addData("br", bR.getCurrentPosition());
-            telemetry.update();
+            dt.turnHeading(-90, .6, 0, 0, .14);
+            break;
         }
+        stop();
     }
 }

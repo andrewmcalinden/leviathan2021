@@ -28,7 +28,7 @@ public class Grabber {
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         grabber = opMode.hardwareMap.servo.get("grabber");
-        openGrabber();
+        closeGrabber();
         startPos = arm.getCurrentPosition();
         lastButtonPressed = false;
         open = false;
@@ -119,14 +119,15 @@ public class Grabber {
             double f = p > 0 ? .07 : -.07;
             arm.setPower(p * .45  + f); //was -.6
         }
+        openGrabber();
         arm.setPower(0);
     }
 
     public void closeGrabber(){
-        grabber.setPosition(.25);
+        grabber.setPosition(.4);
     }
 
     public void openGrabber(){
-        grabber.setPosition(.4);
+        grabber.setPosition(.25);
     }
 }
