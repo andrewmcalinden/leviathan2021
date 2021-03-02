@@ -40,7 +40,7 @@ public class RedAuto extends LinearOpMode {
 
         while (!isStopRequested()){
             dt.movePIDFGyro(63, .8, 0, 0, .14);
-            dt.strafeRightGyro(.5, 20);
+            dt.strafeGyro(.5, 20);
             dt.turnHeading(20, .3, 0, 0, .14);
             for (int i = 0; i < 4; i++){
                 mtrShooter.setPower(1);
@@ -62,15 +62,15 @@ public class RedAuto extends LinearOpMode {
             dt.turnHeading(0, .3, 0, 0, .14); //turn to 0 degrees
 
             //hopefully we land in zone b
-            dt.movePIDFGyro(47, .6, 0, 0, .14);
+            dt.movePIDFGyro(43, .6, 0, 0, .14);
 
             //case A
-            dt.strafeRightGyro(.5, 30);
+            dt.strafeGyro(.5, 30);
             dt.turnHeading(0, .3, 0, 0, .14); //turn to 0 degrees
             grabber.deployWobble();
             sleep(500);
-            dt.strafeLeftGyro(.5, 30);
-            dt.movePIDFGyro(-60, .7, 0, 0, .14);
+            dt.strafeGyro(.5, -30);
+            dt.movePIDFGyro(-30, .5, 0, 0, .14);
 
             /*
             Cheese way to do it without turns or backing up(try this out if you want)

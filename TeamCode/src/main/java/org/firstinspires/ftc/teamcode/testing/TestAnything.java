@@ -19,9 +19,40 @@ public class TestAnything extends LinearOpMode {
         dt = new Drivetrain(this);
 
         waitForStart();
-
         while (!isStopRequested()){
-            dt.turnHeading(-90, .6, 0, 0, .14);
+//            dt.turnHeading(-90, .6, 0, 0, .14);
+//            dt.turnHeading(70, .6, 0, 0, .14);
+//            telemetry.addLine("done with turns");
+//            telemetry.update();
+//            sleep(1000);
+
+            //dt.movePIDFGyro(20, .6, 0, 0, .14);
+            telemetry.addLine("done with first straight");
+            telemetry.update();
+            sleep(1000);
+
+            telemetry.clear();
+            telemetry.update();
+
+            dt.movePIDFGyro(-80, .6, 0, 0, .14);
+            telemetry.addLine("done with second straight");
+            telemetry.update();
+            sleep(1000);
+
+            telemetry.clear();
+            telemetry.update();
+
+
+            dt.strafeGyro(.5, 20);
+            telemetry.addLine("done with first strafe");
+            telemetry.update();
+            sleep(1000);
+
+            dt.strafeGyro(.5, -20);
+            telemetry.addLine("done with second straight");
+            telemetry.update();
+            sleep(1000);
+
             break;
         }
         stop();
