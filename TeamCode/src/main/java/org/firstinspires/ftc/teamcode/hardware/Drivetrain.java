@@ -106,7 +106,7 @@ public class Drivetrain  {
                     opMode.telemetry.addData("turning left", gyro.getAngle());
                 }
                 else if (angleDiff > 1){
-                    startMotors(power * 1.2, -power * 1.2, -power * .8, power * .8);
+                    startMotors(power * .8, -power * .8, -power * 1.2, power * 1.2);
                     opMode.telemetry.addData("turning right", gyro.getAngle());
                 }
                 else{
@@ -121,11 +121,11 @@ public class Drivetrain  {
             while (Math.abs(getTic() / COUNTS_PER_INCH) < Math.abs(inches) && !opMode.isStopRequested()) {
                 double angleDiff = Math.abs(gyro.getAngle() - initialAngle);
                 if (angleDiff > 1){
-                    startMotors(-power * 1.2, power * 1.2, power * .8, -power * .8);
+                    startMotors(-power * .8, power * .8, power * 1.2, -power * 1.2);
                     opMode.telemetry.addData("turning left", gyro.getAngle());
                 }
                 else if (angleDiff < -1){
-                    startMotors(-power * 1.2, power * 1.2, power * .8, -power * .8);
+                    startMotors(-power * .8, power * .8, power * 1.2, -power * 1.2);
                     opMode.telemetry.addData("turning right", gyro.getAngle());
                 }
                 else{
@@ -171,6 +171,12 @@ public class Drivetrain  {
         fL.setPower(fl);
         bL.setPower(bl);
         bR.setPower(br);
+
+        opMode.telemetry.addData("fl", fl);
+        opMode.telemetry.addData("fr", fr);
+        opMode.telemetry.addData("bl", bl);
+        opMode.telemetry.addData("br", br);
+        opMode.telemetry.update();
     }
 
     double angleWrapDeg(double angle) {
@@ -263,41 +269,40 @@ public class Drivetrain  {
             if (difference > 2){
                 if (power > 0) {
                     startMotors((power + f) * .8, power + f, (power + f) * .8, power + f);
-                    opMode.telemetry.addLine("setting positive powers");
+                    //opMode.telemetry.addLine("setting positive powers");
 
                 }
                 else {
-                    startMotors((power - f) * .8, power - f, (power - f) * .8, power - f);
-                    opMode.telemetry.addLine("setting negative powers 1");
+                    startMotors((power - f), (power - f) * .8, (power - f), (power - f) * .8);
+                    //opMode.telemetry.addLine("setting negative powers 1");
                 }
             }
             else if(difference < -2){
                 if (power > 0) {
                     startMotors(power + f, (power + f) * .8, power + f, (power + f) * .8);
-                    opMode.telemetry.addLine("setting positive powers");
+                    //opMode.telemetry.addLine("setting positive powers");
 
                 }
                 else {
-                    startMotors(power - f, (power - f) * .8, power - f, (power - f) * .8);
-                    opMode.telemetry.addLine("setting negative powers 2");
+                    startMotors((power - f) * .8, (power - f), (power - f) * .8, (power - f));
+                    //opMode.telemetry.addLine("setting negative powers 2");
 
                 }
             }
             else{
                 if (power > 0) {
                     startMotors(power + f, power + f, power + f, power + f);
-                    opMode.telemetry.addLine("setting positive powers");
+                    //opMode.telemetry.addLine("setting positive powers");
 
                 }
                 else {
-                    startMotors(power - f, power - f, power - f, -power - f);
-                    opMode.telemetry.addLine("setting negative powers 3");
-
+                    startMotors(power - f, power - f, power - f, power - f);
+                    //opMode.telemetry.addLine("setting negative powers 3");
                 }
             }
             pastTime = currentTime;
             pastError = error;
-            opMode.telemetry.update();
+            //opMode.telemetry.update();
         }
         stopMotors();
     }

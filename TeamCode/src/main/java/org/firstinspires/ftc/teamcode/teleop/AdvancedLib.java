@@ -49,7 +49,7 @@ public abstract class AdvancedLib extends OpMode {
         fR.setDirection(DcMotor.Direction.FORWARD);
         fL.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.FORWARD);
-        bL.setDirection(DcMotor.Direction.REVERSE);
+        bL.setDirection(DcMotor.Direction.FORWARD);
 
         mtrShooter = hardwareMap.get(DcMotorEx.class, "shooter");
         mtrShooter.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -70,7 +70,7 @@ public abstract class AdvancedLib extends OpMode {
 
         transferServo.setPosition(.45);
 
-        servoPos = 0;
+        servoPos = .45;
         servoPressedLastTime = false;
     }
 
@@ -120,7 +120,7 @@ public abstract class AdvancedLib extends OpMode {
     }
 
     public void updateTransfer(){
-        if (gamepad1.x && !servoPressedLastTime){
+        if (gamepad2.x && !servoPressedLastTime){
             if (servoPos == 0){
                 servoPos = .45;
                 telemetry.clear();
@@ -134,7 +134,7 @@ public abstract class AdvancedLib extends OpMode {
             }
             transferServo.setPosition(servoPos);
         }
-        servoPressedLastTime = gamepad1.x;
+        servoPressedLastTime = gamepad2.x;
     }
 
     public void robotCentricTrigMecanum(double x, double y, double turn){
@@ -223,7 +223,7 @@ public abstract class AdvancedLib extends OpMode {
     }
 
     public void updateShooter(){
-        if (gamepad1.a && !pressedLastTime){
+        if (gamepad2.a && !pressedLastTime){
             if (mtrPower == 0){
                 mtrPower = 1;
             }
@@ -233,7 +233,7 @@ public abstract class AdvancedLib extends OpMode {
             mtrShooter.setPower(mtrPower);
             transfer.setPower(mtrPower);
         }
-        pressedLastTime = gamepad1.a;
+        pressedLastTime = gamepad2.a;
     }
 
     public void updateShooterShaan(){
@@ -268,6 +268,6 @@ public abstract class AdvancedLib extends OpMode {
 
 
     public void updateGrabber(){
-        grabber.update(gamepad2.left_stick_y, gamepad2.a, gamepad2.y, gamepad2.x);
+        grabber.update(gamepad2.left_stick_y, gamepad2.y, gamepad2.dpad_up, gamepad2.dpad_down, gamepad2.right_bumper);
     }
 }

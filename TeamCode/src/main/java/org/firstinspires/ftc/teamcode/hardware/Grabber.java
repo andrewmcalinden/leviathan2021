@@ -18,14 +18,15 @@ public class Grabber {
     private boolean lastButtonPressed;
     private boolean open;
 
-    private boolean lastMacro;
-    private boolean up;
-
     public Grabber(LinearOpMode opMode){
         arm = opMode.hardwareMap.get(DcMotor.class, "arm");
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        arm.setDirection((DcMotor.Direction.FORWARD));
+        arm.setDirection((DcMotor.Direction.REVERSE));
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        opMode.idle();
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        opMode.idle();
 
         grabber = opMode.hardwareMap.servo.get("grabber");
         closeGrabber();
@@ -39,8 +40,10 @@ public class Grabber {
     public Grabber(OpMode opMode){
         arm = opMode.hardwareMap.get(DcMotor.class, "arm");
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        arm.setDirection((DcMotor.Direction.FORWARD));
+        arm.setDirection((DcMotor.Direction.REVERSE));
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         grabber = opMode.hardwareMap.servo.get("grabber");
         openGrabber();
@@ -51,8 +54,11 @@ public class Grabber {
         myOpmode = opMode;
     }
     //this is some cheese, should probably comment out
-    public void update(double power, boolean buttonPressed, boolean liftUp, boolean goToNeck){
-        if (power == 0){
+    public void update(double power, boolean buttonPressed, boolean liftUp, boolean goToNeck, boolean hold){
+        if(hold){
+            arm.setPower(-.2);
+        }
+        else if (power == 0){
             arm.setPower(0);
             if (liftUp){
                 liftUp();
@@ -62,7 +68,7 @@ public class Grabber {
             }
         }
         else{
-            arm.setPower(-.1 + Math.abs(power) * power * .6);
+            arm.setPower(-.1 + Math.abs(power) * Math.abs(power) * power);
         }
         if(buttonPressed && !lastButtonPressed){
             if (open){
@@ -74,32 +80,40 @@ public class Grabber {
                 open = true;
             }
         }
+        myOpmode.telemetry.addData("position", arm.getCurrentPosition());
+        myOpmode.telemetry.addData("power",-.1 + Math.abs(power) * Math.abs(power) * power );
+        myOpmode.telemetry.update();
         lastButtonPressed = buttonPressed;
     }
 
-    public void liftUp(){ //-16 = start, -144 = up, -270 = neck
+    public void liftUp(){
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
-        double target = startPos - 130; //-130
-        double error = arm.getCurrentPosition() - target;
-        double initialError = Math.abs(error); //130
+        double target = startPos + 300; //500
+        double error = target - arm.getCurrentPosition(); //-500
+        double initialError = Math.abs(error); //500
         while(Math.abs(error) > 5 && timer.seconds() < 2){
-            error = arm.getCurrentPosition() - target; //positive, starts at 130, goes closer to 0 over time
+            error = target - arm.getCurrentPosition();
             double p = error / initialError; //will be positive if starting from initialization
             double f = p > 0 ? .07 : -.07;
-            arm.setPower(p * .25 + f); //was -.6
+            arm.setPower(p * .25 + f);
+            myOpmode.telemetry.addData("power", p * .25 + f);
+            myOpmode.telemetry.addData("error", error);
+            myOpmode.telemetry.update();
         }
+        myOpmode.telemetry.clear();
+        myOpmode.telemetry.update();
         arm.setPower(0);
     }
 
     public void goToNeck(){
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
-        double target = startPos - 250; //-250
-        double error = arm.getCurrentPosition() - target;
-        double initialError = Math.abs(error); //130
+        double target = startPos + 600;
+        double error = target - arm.getCurrentPosition(); //-500
+        double initialError = Math.abs(error);
         while(Math.abs(error) > 5 && timer.seconds() < 2){
-            error = arm.getCurrentPosition() - target; //positive, starts at 130, goes closer to 0 over time
+            error = target - arm.getCurrentPosition(); //-500
             double p = error / initialError; //will be positive if starting from initialization
             double f = p > 0 ? .07 : -.07;
             arm.setPower(p * .25 + f); //was -.6
@@ -110,11 +124,11 @@ public class Grabber {
     public void deployWobble(){
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
-        double target = startPos - 300; //-300
-        double error = arm.getCurrentPosition() - target;
+        double target = startPos + 700; //-300
+        double error = target - arm.getCurrentPosition(); //-500
         double initialError = Math.abs(error); //130
         while(Math.abs(error) > 5 && timer.seconds() < 2){
-            error = arm.getCurrentPosition() - target; //positive, starts at 130, goes closer to 0 over time
+            error = target - arm.getCurrentPosition(); //-50
             double p = error / initialError; //will be positive if starting from initialization
             double f = p > 0 ? .07 : -.07;
             arm.setPower(p * .45  + f); //was -.6

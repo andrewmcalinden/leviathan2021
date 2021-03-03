@@ -16,8 +16,8 @@ public class ShaanTeleop extends AdvancedLib {
             fieldCentricMecanum(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, robotHeadingRad);
         }
         updateIntake(); //hold left bumper gamepad1
-        updateShooterShaan(); //toggle a gamepad1
+        updateShooter(); //toggle a gamepad1
         updateGrabber();
-        updateTransferShaan();
+        updateTransfer();
     }
 }
