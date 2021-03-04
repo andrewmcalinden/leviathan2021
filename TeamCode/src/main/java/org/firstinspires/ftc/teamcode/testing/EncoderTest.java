@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 
-@Autonomous(name = "encoder test", group = "18030")
+@Disabled
 public class EncoderTest extends LinearOpMode {
     Drivetrain dt;
 

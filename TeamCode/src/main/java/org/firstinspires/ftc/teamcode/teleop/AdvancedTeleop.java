@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "AdvancedTeleop", group = "18030")
+@Disabled
 public class AdvancedTeleop extends AdvancedLib {
 
     @Override

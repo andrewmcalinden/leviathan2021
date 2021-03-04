@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.FinalHeading;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.math.Vector;
@@ -14,21 +15,19 @@ import org.firstinspires.ftc.teamcode.math.Vector;
 public class TestAnything extends LinearOpMode {
 
     Drivetrain dt;
-    Grabber grabber;
 
     @Override
     public void runOpMode() throws InterruptedException {
         dt = new Drivetrain(this);
-        grabber = new Grabber(this);
+
+        telemetry.addData("final heading", FinalHeading.finalHeading);
+        telemetry.update();
+        sleep(2000);
 
         waitForStart();
-        while (!isStopRequested()){
-            dt.strafeGyro(.5, 67);
-            sleep(500);
-            dt.strafeGyro(.5, -67);
-            break;
-        }
-        stop();
+        FinalHeading.finalHeading = dt.gyro.getAngle();
+        telemetry.addData("final heading", FinalHeading.finalHeading);
+        telemetry.update();
     }
 }
 

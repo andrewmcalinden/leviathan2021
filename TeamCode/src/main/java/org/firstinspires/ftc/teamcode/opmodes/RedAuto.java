@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Vision;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.FinalHeading;
@@ -21,6 +22,8 @@ public class RedAuto extends LinearOpMode {
     public DcMotor transfer;
 
     public Servo transferServo;
+
+    public Vision ringCounter;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,6 +39,15 @@ public class RedAuto extends LinearOpMode {
 
         grabber.closeGrabber();
         transferServo.setPosition(.45);
+
+        telemetry.setAutoClear(false);
+        ringCounter = new Vision(this);
+
+        int numRings = 0;
+        while(!isStarted()){
+            numRings = ringCounter.numRingsRightSide();
+        }
+
         waitForStart();
 
         while (!isStopRequested()){
@@ -60,7 +72,6 @@ public class RedAuto extends LinearOpMode {
             mtrShooter.setPower(0);
             transfer.setPower(0);
 
-            int numRings = 4;
             switch (numRings){
                 case 0:
                     dt.movePIDFGyro(20, .4, 0, 0, .14);
@@ -72,6 +83,7 @@ public class RedAuto extends LinearOpMode {
                 case 1:
                     dt.turnHeading(180, .8, 0, 0, .14);
                     dt.movePIDFGyro(-37, .6, 0, 0, .14);
+                    dt.strafeGyro(.3, -5);
                     grabber.deployWobble();
                     dt.movePIDFGyro(20, .6, 0, 0, .14);
                     break;
@@ -79,44 +91,11 @@ public class RedAuto extends LinearOpMode {
                     dt.turnHeading(0, .3, 0, 0, .14);
                     dt.movePIDFGyro(67, .6, 0, 0, .14);
                     dt.turnHeading(90, .6, 0, 0, .14);
-                    dt.movePIDFGyro(-20, .3, 0, 0, .14);
+                    dt.movePIDFGyro(-10, .3, 0, 0, .14);
                     grabber.deployWobble();
                     dt.movePIDFGyro(10, .4, 0, 0, .14);
                     dt.strafeGyro(.5, -50);
             }
-            stop();
-
-            /* old, bad a
-            dt.turnHeading(0, .3, 0, 0, .14); //turn to 0 degrees
-            dt.movePIDFGyro(43, .6, 0, 0, .14);
-            dt.strafeGyro(.5, 30);
-            dt.turnHeading(0, .3, 0, 0, .14); //turn to 0 degrees
-            dt.movePIDFGyro(-7, .3, 0, 0, .14);
-            grabber.deployWobble();
-            sleep(500);
-            dt.strafeGyro(.5, -30);
-            dt.movePIDFGyro(-15, .5, 0, 0, .14);
-*           */
-
-            /*
-            Cheese way to do it without turns or backing up(try this out if you want)
-            Case 0 (A):
-                dt.strafeInches(.5, 30)
-                grabber.deployWobble();
-                dt.strafeInches(-.5, 30)
-                dt.goStraight(-.5, 30)
-            Case 1(B):
-                dt.turnPIDF(-180, .3, 0, 0, .1);
-                grabber.deployWobble();
-                dt.movePIDFGyro(30, .4, 0, 0, .1);
-            Case 4(C):
-                dt.movePIDFGyro(6, .4, 0, 0, .1);
-                dt.turnPIDF(-180, .3, 0, 0, .1);
-                dt.strafeInches(-.5, 30)
-                grabber.deployWobble();
-                dt.movePIDFGyro(36, .4, 0, 0, .1);
-            */
-
             FinalHeading.finalHeading = dt.gyro.getAngle();
             break;
         }

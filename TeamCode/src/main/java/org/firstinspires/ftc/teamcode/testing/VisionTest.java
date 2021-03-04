@@ -17,14 +17,7 @@ public class VisionTest extends LinearOpMode {
         while(!isStarted()){
             int num = ringCounter.numRingsRightSide();
         }
-        telemetry.setAutoClear(true);
-        telemetry.update();
         waitForStart();
-        telemetry.addLine("1");
-        telemetry.update();
-        sleep(1000);
-        telemetry.addLine("2");
-        telemetry.update();
-        sleep(1000);
+        stop();
     }
 }

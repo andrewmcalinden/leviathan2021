@@ -100,12 +100,12 @@ public class Drivetrain  {
         resetEncoder();
         if (inches > 0){ //strafe right
             while (Math.abs(getTic() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
-                double angleDiff = Math.abs(gyro.getAngle() - initialAngle);
-                if (angleDiff < -1){
+                double angleDiff = gyro.getAngle() - initialAngle;
+                if (angleDiff > 1){
                     startMotors(power * 1.2, -power * 1.2, -power * .8, power * .8);
                     opMode.telemetry.addData("turning left", gyro.getAngle());
                 }
-                else if (angleDiff > 1){
+                else if (angleDiff < -1){
                     startMotors(power * .8, -power * .8, -power * 1.2, power * 1.2);
                     opMode.telemetry.addData("turning right", gyro.getAngle());
                 }
@@ -119,12 +119,12 @@ public class Drivetrain  {
         }
         else{ //strafe left
             while (Math.abs(getTic() / COUNTS_PER_INCH) < Math.abs(inches) && !opMode.isStopRequested()) {
-                double angleDiff = Math.abs(gyro.getAngle() - initialAngle);
-                if (angleDiff > 1){
-                    startMotors(-power * .8, power * .8, power * 1.2, -power * 1.2);
+                double angleDiff = gyro.getAngle() - initialAngle;
+                if (angleDiff < -1){
+                    startMotors(-power * 1.2, power * 1.2, power * .8, -power * .8);
                     opMode.telemetry.addData("turning left", gyro.getAngle());
                 }
-                else if (angleDiff < -1){
+                else if (angleDiff > 1){
                     startMotors(-power * .8, power * .8, power * 1.2, -power * 1.2);
                     opMode.telemetry.addData("turning right", gyro.getAngle());
                 }

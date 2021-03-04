@@ -40,7 +40,7 @@ public class Vision {
         int cameraMonitorViewId = this.opMode.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", this.opMode.hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         params.vuforiaLicenseKey = "AQvLCbX/////AAABmTGnnsC2rUXvp1TAuiOSac0ZMvc3GKI93tFoRn4jPzB3uSMiwj75PNfUU6MaVsNZWczJYOep8LvDeM/3hf1+zO/3w31n1qJTtB2VHle8+MHWNVbNzXKLqfGSdvXK/wYAanXG2PBSKpgO1Fv5Yg27eZfIR7QOh7+J1zT1iKW/VmlsVSSaAzUSzYpfLufQDdE2wWQYrs8ObLq2kC37CeUlJ786gywyHts3Mv12fWCSdTH5oclkaEXsVC/8LxD1m+gpbRc2KC0BXnlwqwA2VqPSFU91vD8eCcD6t2WDbn0oJas31PcooBYWM6UgGm9I2plWazlIok72QG/kOYDh4yXOT4YXp1eYh864e8B7mhM3VclQ";
-        params.cameraName = opMode.hardwareMap.get(WebcamName.class, "Webcam 1");
+        params.cameraName = opMode.hardwareMap.get(WebcamName.class, "webcam");
         vuforia = ClassFactory.getInstance().createVuforia(params);
         Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true); //enables RGB565 format for the image
         vuforia.setFrameQueueCapacity(4); //tells VuforiaLocalizer to only store one frame at a time
@@ -81,10 +81,10 @@ public class Vision {
     }
 
     //checks 1 row if pixels that should be in the area where the top ring is
-    //checks 200 pixels, and if 60 are yellow, it returns true
+    //checks 100 pixels, and if 30 are orange, it returns true
     public boolean yellowInTopRightSide() throws InterruptedException {
-        final int topY = 440;
-        final int topXLeft = 1020, topXRight = 1220; //200 total pixels
+        final int topY = 457;
+        final int topXLeft = 1467, topXRight = 1582; //200 total pixels
         int numYellow = 0;
 
         for(int x = topXLeft; x < topXRight; x++){
@@ -95,7 +95,7 @@ public class Vision {
         }
         topNum.setValue(numYellow);
         opMode.telemetry.update();
-        return (numYellow > 60);
+        return (numYellow > 15);
     }
 
     //checks 1 row if pixels that should be in the area where the top ring is
@@ -135,10 +135,10 @@ public class Vision {
     }
 
     //checks 1 row if pixels that should be in the area where the bottom ring is
-    //checks 200 pixels, and if 60 are yellow, it returns true
+    //checks 100 pixels, and if 30 are yellow, it returns true
     public boolean yellowInBottomRightSide() throws InterruptedException {
-        final int bottomY = 500;
-        final int bottomXLeft = 1020, bottomXRight = 1220; //200 total pixels
+        final int bottomY = 509;
+        final int bottomXLeft = 1480, bottomXRight = 1580; //200 total pixels
         int numYellow = 0;
 
         for(int x = bottomXLeft; x < bottomXRight; x++){
@@ -149,7 +149,7 @@ public class Vision {
         }
         bottomNum.setValue(numYellow);
         opMode.telemetry.update();
-        return (numYellow > 60);
+        return (numYellow > 12);
     }
 
     public int numRingsLeftSide() throws InterruptedException {
