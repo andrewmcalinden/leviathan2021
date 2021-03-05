@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Vision;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Grabber;
-import org.firstinspires.ftc.teamcode.FinalHeading;
+import org.firstinspires.ftc.teamcode.GlobalVars;
 
 @Autonomous(name = "red auto", group = "18030")
 public class RedAuto extends LinearOpMode {
@@ -96,7 +96,8 @@ public class RedAuto extends LinearOpMode {
                     dt.movePIDFGyro(10, .4, 0, 0, .14);
                     dt.strafeGyro(.5, -50);
             }
-            FinalHeading.finalHeading = dt.gyro.getAngle();
+            GlobalVars.finalHeading = dt.gyro.getAngle();
+            grabber.goToStart();
             break;
         }
         stop();

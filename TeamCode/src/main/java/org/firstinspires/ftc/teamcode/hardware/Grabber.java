@@ -14,7 +14,7 @@ public class Grabber {
 
     public OpMode myOpmode;
 
-    private double startPos;
+    public double startPos;
     private boolean lastButtonPressed;
     private boolean open;
 
@@ -53,6 +53,11 @@ public class Grabber {
 
         myOpmode = opMode;
     }
+
+    public void setStartPos(double position){
+        startPos = position;
+    }
+
     //this is some cheese, should probably comment out
     public void update(double power, boolean buttonPressed, boolean liftUp, boolean goToNeck, boolean hold){
         if(hold){
@@ -81,36 +86,44 @@ public class Grabber {
             }
         }
 //        myOpmode.telemetry.addData("position", arm.getCurrentPosition());
-//        myOpmode.telemetry.addData("power",-.1 + Math.abs(power) * Math.abs(power) * power );
+////        myOpmode.telemetry.addData("power",-.1 + Math.abs(power) * Math.abs(power) * power );
 //        myOpmode.telemetry.update();
         lastButtonPressed = buttonPressed;
     }
 
-    public void goToPos(double target){
+    public void goToPos(double target, double power){
+        //myOpmode.telemetry.addData("initialPos", startPos);
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
         target += startPos;
+//        myOpmode.telemetry.addData("target", target);
+//        myOpmode.telemetry.update();
         double error = target - arm.getCurrentPosition(); //-500
         double initialError = Math.abs(error); //500
-        while(Math.abs(error) > 5 && timer.seconds() < 2){
+        while(Math.abs(error) > 15 && timer.seconds() < 2){
             error = target - arm.getCurrentPosition();
             double p = error / initialError; //will be positive if starting from initialization
             double f = p > 0 ? .07 : -.07;
-            arm.setPower(p * .6 + f);
+            arm.setPower(p * power + f);
         }
         arm.setPower(0);
     }
 
     public void liftUp(){
-        goToPos(200);
+        goToPos(350, .75);
+    }
+
+    public void goToStart(){
+        goToPos(startPos, .6);
+        goToPos(startPos, .6);
     }
 
     public void goToNeck(){
-        goToPos(700);
+        goToPos(675, .6);
     }
 
     public void deployWobble(){
-        goToPos(750);
+        goToPos(750, .6);
         openGrabber();
     }
 

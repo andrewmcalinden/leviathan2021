@@ -5,13 +5,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.FinalHeading;
+import org.firstinspires.ftc.teamcode.GlobalVars;
 import org.firstinspires.ftc.teamcode.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.hardware.Sensors;
-import org.firstinspires.ftc.teamcode.hardware.Shooter;
-import org.firstinspires.ftc.teamcode.hardware.Transfer;
 import org.firstinspires.ftc.teamcode.math.Vector;
 
 public abstract class AdvancedLib extends OpMode {
@@ -76,8 +73,6 @@ public abstract class AdvancedLib extends OpMode {
 
     //angle must be measured counterclockwise from x axis
     public void fieldCentricMecanum(double x, double y, double turn, double robotHeadingRad){
-        robotHeadingRad -= FinalHeading.finalHeading * (Math.PI / 180.0); //might need to add
-
         Vector movement = new Vector(x, y);
         movement = movement.rotated(-robotHeadingRad);
         double rightX = turn;
@@ -215,7 +210,12 @@ public abstract class AdvancedLib extends OpMode {
     public void updateIntake(){
         if(gamepad1.left_bumper){
             intake.setPower(1);
-            transferServo.setPosition(.45);
+            if (mtrPower == 0){
+                transferServo.setPosition(.45);
+            }
+        }
+        else if(gamepad1.dpad_down){
+            intake.setPower(-1);
         }
         else{
             intake.setPower(0);
