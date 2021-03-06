@@ -1,30 +1,29 @@
 package org.firstinspires.ftc.teamcode.testing;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.GlobalVars;
 import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
+import org.firstinspires.ftc.teamcode.hardware.Grabber;
 
-@Autonomous(name = "test anything", group = "18030")
+@TeleOp(name = "test anything", group = "18030")
 public class TestAnything extends LinearOpMode {
 
-    Drivetrain dt;
 
+    Drivetrain dt;
     @Override
     public void runOpMode() throws InterruptedException {
+
         dt = new Drivetrain(this);
-
-        telemetry.addData("final heading", GlobalVars.finalHeading);
-        telemetry.update();
-        sleep(2000);
-
         waitForStart();
-        GlobalVars.finalHeading = dt.gyro.getAngle();
-        telemetry.addData("final heading", GlobalVars.finalHeading);
-        telemetry.update();
+
+        while(!isStopRequested()) {
+            dt.movePIDFGyro(63, .8, 0, 0, .14);
+            sleep(2700);
+            break;
+        }
+        stop();
     }
 }
-
-//make goToPos method for grabber
-//fix spaghet
-//add pid to strafe gyro

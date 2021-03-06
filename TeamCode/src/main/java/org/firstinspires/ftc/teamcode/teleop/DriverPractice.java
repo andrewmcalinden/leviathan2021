@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GlobalVars;
 
 @TeleOp(name = "driver practice", group = "18030")
 public class DriverPractice extends AdvancedLib {
+    ElapsedTime timer = new ElapsedTime();
+    int nextTimeStamp = 15;
 
     @Override
     public void loop(){
@@ -24,5 +27,9 @@ public class DriverPractice extends AdvancedLib {
 //        telemetry.addData("initial heading", initialHeading);
 //        telemetry.addData("current heading", robotHeadingRad /** (180.0 / Math.PI)*/);
 //        telemetry.update();
+        if (timer.seconds() == nextTimeStamp){
+            telemetry.speak("" + (120 - timer.seconds()));
+            nextTimeStamp++;
+        }
     }
 }

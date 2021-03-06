@@ -266,7 +266,7 @@ public class Drivetrain  {
             opMode.telemetry.update();
             double difference = Math.abs(gyro.angleDiff(initialHeading));
 
-            if (difference > 2){
+            if (difference < -2){
                 if (power > 0) {
                     startMotors((power + f) * .8, power + f, (power + f) * .8, power + f);
                     //opMode.telemetry.addLine("setting positive powers");
@@ -277,7 +277,7 @@ public class Drivetrain  {
                     //opMode.telemetry.addLine("setting negative powers 1");
                 }
             }
-            else if(difference < -2){
+            else if(difference > 2){
                 if (power > 0) {
                     startMotors(power + f, (power + f) * .8, power + f, (power + f) * .8);
                     //opMode.telemetry.addLine("setting positive powers");

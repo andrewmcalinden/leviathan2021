@@ -79,11 +79,15 @@ public class Grabber {
             if (open){
                 closeGrabber();
                 open = false;
+                myOpmode.telemetry.addLine("closing");
             }
             else{
                 openGrabber();
                 open = true;
+                myOpmode.telemetry.addLine("opening");
             }
+            myOpmode.telemetry.addLine("button pressed");
+            myOpmode.telemetry.update();
         }
 //        myOpmode.telemetry.addData("position", arm.getCurrentPosition());
 ////        myOpmode.telemetry.addData("power",-.1 + Math.abs(power) * Math.abs(power) * power );
@@ -128,10 +132,10 @@ public class Grabber {
     }
 
     public void closeGrabber(){
-        grabber.setPosition(.42);
+        grabber.setPosition(.5);
     }
 
     public void openGrabber(){
-        grabber.setPosition(.25);
+        grabber.setPosition(.33);
     }
 }

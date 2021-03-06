@@ -136,7 +136,7 @@ public class Vision {
     //checks 1 row if pixels that should be in the area where the bottom ring is
     //checks 100 pixels, and if 30 are yellow, it returns true
     public boolean yellowInBottomRightSide() throws InterruptedException {
-        final int bottomY = 509;
+        final int bottomY = 512;
         final int bottomXLeft = 1480, bottomXRight = 1580; //200 total pixels
         int numYellow = 0;
 

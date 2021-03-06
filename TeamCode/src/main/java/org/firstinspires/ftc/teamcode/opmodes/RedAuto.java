@@ -76,7 +76,7 @@ public class RedAuto extends LinearOpMode {
                 case 0:
                     dt.movePIDFGyro(20, .4, 0, 0, .14);
                     dt.turnHeading(90, .6, 0, 0, .14);
-                    dt.movePIDFGyro(-15, .3, 0, 0, .14);
+                    dt.movePIDFGyro(-17, .3, 0, 0, .14);
                     grabber.deployWobble();
                     dt.movePIDFGyro(10, .3, 0, 0, .14);
                     break;
