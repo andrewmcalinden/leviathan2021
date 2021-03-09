@@ -138,6 +138,76 @@ public class Drivetrain  {
         stopMotors();
     }
 
+    public void strafePIDGyro(double kp, double ki, double kd, double f, double inches){
+        timer.reset();
+        resetEncoder();
+
+        double pastTime = 0;
+        double currentTime = timer.milliseconds();
+
+        double initialHeading = gyro.getAngle();
+
+        double initialError = Math.abs(inches); //-20
+        double error = initialError;
+        double pastError = error;
+
+        double integral = 0;
+
+        while (Math.abs(error) > 1 && !opMode.isStopRequested()) {
+            if (inches < 0){
+                error = inches + getTic() / COUNTS_PER_INCH;
+            }
+            else{
+                error = inches - getTic() / COUNTS_PER_INCH;
+            }
+            opMode.telemetry.addData("error", error);
+
+            currentTime = timer.milliseconds();
+            double dt = currentTime - pastTime;
+
+            double proportional = error / initialError;
+            integral += dt * ((error + pastError) / 2.0);
+            double derivative = (error - pastError) / dt;
+
+            double power = kp * proportional + ki * integral + kd * derivative;
+            opMode.telemetry.addData("power", power);
+            opMode.telemetry.update();
+            double difference = gyro.angleDiff(initialHeading);
+
+            if (difference > 1){
+                if (power > 0) {
+                    startMotors(.8 * (power + f), .8 * (-power - f), 1.2 * (-power - f), 1.2 * (power + f));
+
+                }
+                else {
+                    startMotors(1.2 * (power - f), 1.2 * (-power + f), .8 * (-power + f), .8 * (power - f));
+                }
+            }
+            else if(difference < -1){
+                if (power > 0) {
+                    startMotors(1.2 * (power + f), 1.2 * (-power - f), .8 * (-power - f), .8 * (power + f));
+
+                }
+                else {
+                    startMotors(.8 * (power - f), .8 * (-power + f), 1.2 * (-power + f), 1.2 * (power - f));
+                }
+            }
+            else{
+                if (power > 0) {
+                    startMotors(power + f, -power - f, -power - f, power + f);
+
+                }
+                else {
+                    startMotors(power - f, -power + f, -power + f, power - f);
+                }
+            }
+            pastTime = currentTime;
+            pastError = error;
+            //opMode.telemetry.update();
+        }
+        stopMotors();
+    }
+
     public void stopMotors() {
         fR.setPower(0);
         fL.setPower(0);
@@ -264,9 +334,9 @@ public class Drivetrain  {
             double power = kp * proportional + ki * integral + kd * derivative;
             opMode.telemetry.addData("power", power);
             opMode.telemetry.update();
-            double difference = Math.abs(gyro.angleDiff(initialHeading));
+            double difference = gyro.angleDiff(initialHeading);
 
-            if (difference < -2){
+            if (difference > 2){
                 if (power > 0) {
                     startMotors((power + f) * .8, power + f, (power + f) * .8, power + f);
                     //opMode.telemetry.addLine("setting positive powers");
@@ -277,7 +347,7 @@ public class Drivetrain  {
                     //opMode.telemetry.addLine("setting negative powers 1");
                 }
             }
-            else if(difference > 2){
+            else if(difference < -2){
                 if (power > 0) {
                     startMotors(power + f, (power + f) * .8, power + f, (power + f) * .8);
                     //opMode.telemetry.addLine("setting positive powers");
