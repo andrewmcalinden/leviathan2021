@@ -89,19 +89,13 @@ public class Grabber {
             myOpmode.telemetry.addLine("button pressed");
             myOpmode.telemetry.update();
         }
-//        myOpmode.telemetry.addData("position", arm.getCurrentPosition());
-////        myOpmode.telemetry.addData("power",-.1 + Math.abs(power) * Math.abs(power) * power );
-//        myOpmode.telemetry.update();
         lastButtonPressed = buttonPressed;
     }
 
     public void goToPos(double target, double power){
-        //myOpmode.telemetry.addData("initialPos", startPos);
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
         target += startPos;
-//        myOpmode.telemetry.addData("target", target);
-//        myOpmode.telemetry.update();
         double error = target - arm.getCurrentPosition(); //-500
         double initialError = Math.abs(error); //500
         while(Math.abs(error) > 15 && timer.seconds() < 2){
@@ -114,20 +108,23 @@ public class Grabber {
     }
 
     public void liftUp(){
-        goToPos(350, .75);
+        goToPos(450, 1);
+    }
+
+    public void holdUp(){
+        arm.setPower(-.2);
     }
 
     public void goToStart(){
-        goToPos(startPos, .6);
-        goToPos(startPos, .6);
+        goToPos(startPos, .47);
     }
 
     public void goToNeck(){
-        goToPos(675, .6);
+        goToPos(675, .47);
     }
 
     public void deployWobble(){
-        goToPos(750, .6);
+        goToPos(750, .47);
         openGrabber();
     }
 

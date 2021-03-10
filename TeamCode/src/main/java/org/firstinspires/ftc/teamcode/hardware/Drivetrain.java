@@ -74,26 +74,6 @@ public class Drivetrain  {
         opMode.idle();
     }
 
-    public void goStraight(double power, double inches){
-        resetEncoder();
-        while (Math.abs(getTic() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
-            startMotors(power, power, power, power);
-            opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
-            opMode.telemetry.update();
-        }
-        stopMotors();
-    }
-
-    public void strafeInches(double power, double inches){ //goes right
-        resetEncoder();
-        while (Math.abs(getTic() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
-            startMotors(power, -power, -power, power);
-            opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
-            opMode.telemetry.update();
-        }
-        stopMotors();
-    }
-
     //maybe add pid later
     public void strafeGyro(double power, double inches){
         double initialAngle = gyro.getAngle();
@@ -153,14 +133,13 @@ public class Drivetrain  {
 
         double integral = 0;
 
-        while (Math.abs(error) > 1 && !opMode.isStopRequested()) {
+        while (Math.abs(error) > .5 && !opMode.isStopRequested()) {
             if (inches < 0){
                 error = inches + getTic() / COUNTS_PER_INCH;
             }
             else{
                 error = inches - getTic() / COUNTS_PER_INCH;
             }
-            opMode.telemetry.addData("error", error);
 
             currentTime = timer.milliseconds();
             double dt = currentTime - pastTime;
@@ -170,8 +149,6 @@ public class Drivetrain  {
             double derivative = (error - pastError) / dt;
 
             double power = kp * proportional + ki * integral + kd * derivative;
-            opMode.telemetry.addData("power", power);
-            opMode.telemetry.update();
             double difference = gyro.angleDiff(initialHeading);
 
             if (difference > 1){
@@ -277,7 +254,7 @@ public class Drivetrain  {
 
         double integral = 0;
 
-        while (Math.abs(error) > 1 && !opMode.isStopRequested()) {
+        while (Math.abs(error) > .5 && !opMode.isStopRequested()) {
             error = gyro.newAngleDiff(gyro.getAngle(), finalAngle);
 
             currentTime = timer.milliseconds();
@@ -315,7 +292,7 @@ public class Drivetrain  {
 
         double integral = 0;
 
-        while (Math.abs(error) > 1 && !opMode.isStopRequested()) {
+        while (Math.abs(error) > .5 && !opMode.isStopRequested()) {
             if (inches < 0){
                 error = inches + getTic() / COUNTS_PER_INCH;
             }
@@ -336,25 +313,25 @@ public class Drivetrain  {
             opMode.telemetry.update();
             double difference = gyro.angleDiff(initialHeading);
 
-            if (difference > 2){
+            if (difference > 1){
                 if (power > 0) {
-                    startMotors((power + f) * .8, power + f, (power + f) * .8, power + f);
+                    startMotors((power + f) * .8, 1.2 * (power + f), (power + f) * .8, 1.2 * (power + f));
                     //opMode.telemetry.addLine("setting positive powers");
 
                 }
                 else {
-                    startMotors((power - f), (power - f) * .8, (power - f), (power - f) * .8);
+                    startMotors((1.2 * (power - f)), (power - f) * .8, 1.2 * ((power - f)), (power - f) * .8);
                     //opMode.telemetry.addLine("setting negative powers 1");
                 }
             }
-            else if(difference < -2){
+            else if(difference < -1){
                 if (power > 0) {
-                    startMotors(power + f, (power + f) * .8, power + f, (power + f) * .8);
+                    startMotors(1.2 * (power + f), (power + f) * .8, 1.2 * (power + f), (power + f) * .8);
                     //opMode.telemetry.addLine("setting positive powers");
 
                 }
                 else {
-                    startMotors((power - f) * .8, (power - f), (power - f) * .8, (power - f));
+                    startMotors((power - f) * .8, (1.2 * (power - f)), (power - f) * .8, (1.2 * (power - f)));
                     //opMode.telemetry.addLine("setting negative powers 2");
 
                 }
@@ -374,55 +351,6 @@ public class Drivetrain  {
             pastError = error;
             //opMode.telemetry.update();
         }
-        stopMotors();
-    }
-
-    //only works for going forwards
-    public void oldMovePIDFGyro(double inches, double p, double i, double d, double f){
-        resetEncoder();
-        timer.reset();
-
-        double Kp = p;
-        double Ki = i;
-        double Kd = d;
-
-        double pastTime = 0;
-        double currentTime = timer.milliseconds();
-        double startPosition = getTic() / COUNTS_PER_INCH;
-        double diffInches = inches - startPosition;
-        double pastError = inches;
-        double error = pastError;
-        double power = 0;
-        double integral = 0;
-        double initialAngle = gyro.getAngle();
-
-        while(Math.abs(error) > .6 && !opMode.isStopRequested()){
-            double tic = inches > 0 ? getTic() : -getTic();
-            error = inches - tic / COUNTS_PER_INCH; //if math.abs, probably would fix
-            currentTime = timer.milliseconds();
-            double dt = currentTime - pastTime;
-
-            double proportional = error / diffInches;
-            integral += dt * ((error + pastError) / 2);
-            double derivative = (error - pastError) / dt;
-
-            power = Kp * proportional + Ki * integral + Kd * derivative;
-            double difference = Math.abs(gyro.angleDiff(initialAngle));
-            if(difference > 2) {
-                if(gyro.angleDiff(initialAngle) < 0){
-                    startMotors(power + f, (power + f) * .8, power + f, (power + f) * .8);
-                }
-                else{
-                    startMotors((power + f) * .8, power + f, (power + f) * .8, power + f);
-                }
-            }
-            else{
-                startMotors(power + f, power + f, power + f, power + f);
-            }
-            pastError = error;
-            pastTime = currentTime;
-        }
-        resetEncoder();
         stopMotors();
     }
 }
