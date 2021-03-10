@@ -108,6 +108,33 @@ public class RedDoubleWobble extends LinearOpMode {
                     grabber.deployWobble();
                     dt.movePIDFGyro(20, .6, 0, 0, .14);
                     */
+                    //new stuff
+                    //depositing the first wobble
+                    dt.movePIDFGyro(40, .6,0,0,.14);
+                    dt.turnHeading(-90, .1, 0, 0, .14);
+                    //going to want to tune this distance
+                    dt.movePIDFGyro(16, .2, 0, 0, .14);
+                    grabber.deployWobble();
+
+                    //turning so that it's zero here aligns the back of the bot(arm) with the goal
+                    dt.turnHeading(0, .1, 0, 0, .14);
+                    //this distance too
+                    dt.movePIDFGyro(-80, .65, 0, 0, .14);
+                    //when grabbing, I honestly think you only need a sleep of like 250 milliseconds, right now you sleep for basically 1.5 seconds
+                    grabber.goToNeck();
+                    sleep(250);
+                    dt.movePIDFGyro(-9.7, .6, 0, 0, .14);
+                    sleep(250);
+                    grabber.closeGrabber();
+                    sleep(250);
+                    grabber.liftUp();
+                    grabber.holdUp();
+                    //tune this distance
+                    dt.movePIDFGyro(76, .65, 0, 0, .14);
+                    dt.turnHeading(-90, .1, 0, 0, .14);
+                    grabber.deployWobble();
+                    //tune this as well
+                    dt.strafePIDGyro(.8, 0, 0, .14, 15);
                     break;
                 default:
                     dt.turnHeading(0, .3, 0, 0, .14);
