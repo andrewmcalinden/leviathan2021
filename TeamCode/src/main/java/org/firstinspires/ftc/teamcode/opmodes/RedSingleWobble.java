@@ -99,31 +99,28 @@ public class RedSingleWobble extends LinearOpMode {
                     break;
                 case 1:
                     dt.turnHeading(180, .8, 0, 0, .14);
-                    dt.movePIDFGyro(-43, .6, 0, 0, .14);
-                    dt.strafePIDGyro(.3, 0, 0, .14, -4);
+                    dt.movePIDFGyro(-43, .9, 0, 0, .14);
                     grabber.deployWobble();
                     sleep(200);
                     grabber.goToStart();
                     dt.turnHeading(180, .000000000001, 0, 0, .14);
-                    dt.movePIDFGyro(20, .8, 0, 0, .14);
+                    dt.strafePIDGyro(.3, 0, 0, .14, 11.5);
+                    dt.movePIDFGyro(85.5, .8, 0, 0, .14);
                     //2nd wobble
                     dt.turnHeading(90, .8, 0, 0, .14);
                     grabber.goToNeck();
-                    //dt.movePIDFGyro(2, .2, 0, .1, .14);
-                    dt.strafePIDGyro(.75, 0.000001, .2, .14, -76.2);
-                    dt.turnHeading(90, .000000000001, 0, 0, .11); //sometimes innacurate
-                    sleep(700);
+                    dt.movePIDFGyro(-9.3, .2, 0, 0, .14);
+                    sleep(200);
                     grabber.closeGrabber();
-                    sleep(700);
+                    sleep(500);
                     grabber.liftUp();
                     grabber.holdUp();
-                    dt.turnHeading(90, .000000000001, 0, 0, .14);
-                    dt.movePIDFGyro(18, .8, 0, 0, .14);
-                    dt.strafePIDGyro(.95, 0.000001, 0, .14, 100);
-                    dt.movePIDFGyro(-2.5, .6, 0, 0, .14);
+                    dt.movePIDFGyro(2, .8, 0, 0, .14);
+                    dt.turnHeading(180, .8, 0, 0, .14);
+                    dt.movePIDFGyro(-75, .8, 0, 0, .14);
+                    dt.strafePIDGyro(.3, 0, 0, .14, -8);
                     grabber.deployWobble();
                     dt.movePIDFGyro(5, .7, 0, 0, .14);
-                    dt.strafePIDGyro(.8, 0, 0, .14, -22);
                     break;
                 default:
                     dt.turnHeading(0, .3, 0, 0, .14);
