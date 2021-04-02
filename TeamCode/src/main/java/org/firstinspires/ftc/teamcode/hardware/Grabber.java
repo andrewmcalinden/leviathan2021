@@ -94,7 +94,7 @@ public class Grabber {
         target += startPos;
         double error = target - arm.getCurrentPosition(); //-500
         double initialError = Math.abs(error); //500
-        while(Math.abs(error) > 15 && timer.seconds() < 2){
+        while(Math.abs(error) > 15 && timer.milliseconds() < 1400){
             error = target - arm.getCurrentPosition();
             double p = error / initialError; //will be positive if starting from initialization
             double f = p > 0 ? .07 : -.07;

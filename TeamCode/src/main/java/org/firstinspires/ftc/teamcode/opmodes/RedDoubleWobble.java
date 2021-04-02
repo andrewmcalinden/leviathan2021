@@ -101,13 +101,12 @@ public class RedDoubleWobble extends LinearOpMode {
                     dt.strafePIDGyro(.8, 0, 0, .14, 15);
                     break;
                 case 1:
-                    /* old single wobble
                     dt.turnHeading(180, .8, 0, 0, .14);
                     dt.movePIDFGyro(-37, .6, 0, 0, .14);
                     dt.strafeGyro(.3, -5);
                     grabber.deployWobble();
                     dt.movePIDFGyro(20, .6, 0, 0, .14);
-                    */
+
                     //new stuff
                     //depositing the first wobble
                     dt.movePIDFGyro(40, .6,0,0,.14);
