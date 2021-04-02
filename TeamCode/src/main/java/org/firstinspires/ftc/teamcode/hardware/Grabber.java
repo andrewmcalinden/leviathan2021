@@ -49,8 +49,6 @@ public class Grabber {
         openGrabber();
         startPos = arm.getCurrentPosition();
         lastButtonPressed = false;
-        open = false;
-
         myOpmode = opMode;
     }
 
@@ -78,12 +76,10 @@ public class Grabber {
         if(buttonPressed && !lastButtonPressed){
             if (open){
                 closeGrabber();
-                open = false;
                 myOpmode.telemetry.addLine("closing");
             }
             else{
                 openGrabber();
-                open = true;
                 myOpmode.telemetry.addLine("opening");
             }
             myOpmode.telemetry.addLine("button pressed");
@@ -108,7 +104,7 @@ public class Grabber {
     }
 
     public void liftUp(){
-        goToPos(450, 1);
+        goToPos(375, 1);
     }
 
     public void holdUp(){
@@ -120,19 +116,21 @@ public class Grabber {
     }
 
     public void goToNeck(){
-        goToPos(675, .47);
+        goToPos(650, .47);
     }
 
     public void deployWobble(){
-        goToPos(750, .47);
+        goToPos(720, .47);
         openGrabber();
     }
 
     public void closeGrabber(){
-        grabber.setPosition(.5);
+        grabber.setPosition(.47);
+        open = false;
     }
 
     public void openGrabber(){
-        grabber.setPosition(.33);
+        grabber.setPosition(0);
+        open = true;
     }
 }

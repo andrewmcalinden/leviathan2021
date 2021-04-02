@@ -54,28 +54,28 @@ public class RedDoubleWobble extends LinearOpMode {
         while (!isStopRequested()){
             dt.movePIDFGyro(63, .8, 0, 0, .14);
             dt.strafePIDGyro(.8, 0, 0, .14, 20);
-            dt.turnHeading(15, .3, 0, 0, .14);
-//            for (int i = 0; i < 4; i++){
-//                mtrShooter.setPower(1);
-//                transfer.setPower(1);
-//                ElapsedTime timer = new ElapsedTime();
-//                timer.reset();
-//                while (timer.seconds() < 2 && !isStopRequested()){
-//                    //do nothing
-//                    telemetry.addLine("we chilling");
-//                    telemetry.update();
-//                }
-//                transferServo.setPosition(0);
-//                sleep(300);
-//                transferServo.setPosition(.45);
-//            }
-//            sleep(300);
-//            mtrShooter.setPower(0);
-//            transfer.setPower(0);
+            dt.turnHeading(7, .3, 0, 0, .14);
+            for (int i = 0; i < 4; i++){
+                mtrShooter.setPower(1);
+                transfer.setPower(1);
+                ElapsedTime timer = new ElapsedTime();
+                timer.reset();
+                while (timer.seconds() < 2 && !isStopRequested()){
+                    //do nothing
+                    telemetry.addLine("we chilling");
+                    telemetry.update();
+                }
+                transferServo.setPosition(0);
+                sleep(400);
+                transferServo.setPosition(.45);
+            }
+            sleep(300);
+            mtrShooter.setPower(0);
+            transfer.setPower(0);
 
             switch (numRings){
                 case 0:
-                    dt.movePIDFGyro(20, .75, 0, 0, .14);
+                    dt.movePIDFGyro(17, .75, 0, 0, .14);
                     dt.turnHeading(90, .6, 0, 0, .14);
                     dt.movePIDFGyro(-17, .5, 0, 0, .14);
                     grabber.deployWobble();

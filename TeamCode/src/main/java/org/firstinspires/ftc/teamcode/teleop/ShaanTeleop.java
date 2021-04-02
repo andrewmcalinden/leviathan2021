@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.GlobalVars;
 @TeleOp(name = "skurt skumar teleop", group = "18030")
 public class ShaanTeleop extends AdvancedLib {
 
-    ElapsedTime timer = new ElapsedTime();
-    int nextTimeStamp = 15;
+//    ElapsedTime timer = new ElapsedTime();
+//    int nextTimeStamp = 15;
     double initialHeading = GlobalVars.finalHeading - 90;
 
     @Override
@@ -30,10 +30,10 @@ public class ShaanTeleop extends AdvancedLib {
 //        telemetry.addData("initial heading", initialHeading);
 //        telemetry.addData("current heading", robotHeadingRad /** (180.0 / Math.PI)*/);
 //        telemetry.update();
-        if (timer.seconds() == nextTimeStamp){
-            telemetry.speak("" + (120 - timer.seconds()));
-            nextTimeStamp++;
-        }
+//        if (timer.seconds() == nextTimeStamp){
+//            telemetry.speak("" + (120 - timer.seconds()));
+//            nextTimeStamp++;
+//        }
     }
 
     double angleWrapDeg(double angle) {

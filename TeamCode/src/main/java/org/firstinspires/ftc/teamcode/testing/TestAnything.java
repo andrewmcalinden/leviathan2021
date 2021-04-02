@@ -20,7 +20,7 @@ public class TestAnything extends LinearOpMode {
         waitForStart();
 
         while(!isStopRequested()) {
-            dt.strafePIDGyro(.8, 0.000001, 0, .14, -77);
+            dt.turnHeading(90, .1, 0, .17, .14);
             break;
         }
         stop();

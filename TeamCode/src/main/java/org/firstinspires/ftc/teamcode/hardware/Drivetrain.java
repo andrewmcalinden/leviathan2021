@@ -254,7 +254,7 @@ public class Drivetrain  {
 
         double integral = 0;
 
-        while (Math.abs(error) > .5 && !opMode.isStopRequested()) {
+        while (Math.abs(error) > .25 && !opMode.isStopRequested()) {
             error = gyro.newAngleDiff(gyro.getAngle(), finalAngle);
 
             currentTime = timer.milliseconds();
@@ -268,7 +268,7 @@ public class Drivetrain  {
             if (power > 0) {
                 startMotors(-power - f, power + f, -power - f, power + f);
             }
-            else {
+            else{
                 startMotors(-power + f, power - f, -power + f, power - f);
             }
             pastTime = currentTime;

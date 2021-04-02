@@ -82,8 +82,8 @@ public class Vision {
     //checks 1 row if pixels that should be in the area where the top ring is
     //checks 100 pixels, and if 30 are orange, it returns true
     public boolean yellowInTopRightSide() throws InterruptedException {
-        final int topY = 457;
-        final int topXLeft = 1467, topXRight = 1582; //200 total pixels
+        final int topY = 422;
+        final int topXLeft = 1460, topXRight = 1560; //200 total pixels
         int numYellow = 0;
 
         for(int x = topXLeft; x < topXRight; x++){
@@ -136,8 +136,8 @@ public class Vision {
     //checks 1 row if pixels that should be in the area where the bottom ring is
     //checks 100 pixels, and if 30 are yellow, it returns true
     public boolean yellowInBottomRightSide() throws InterruptedException {
-        final int bottomY = 512;
-        final int bottomXLeft = 1480, bottomXRight = 1580; //200 total pixels
+        final int bottomY = 490;
+        final int bottomXLeft = 1455, bottomXRight = 1555; //200 total pixels
         int numYellow = 0;
 
         for(int x = bottomXLeft; x < bottomXRight; x++){

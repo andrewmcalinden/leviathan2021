@@ -50,16 +50,17 @@ public class RedSingleWobble extends LinearOpMode {
 
         waitForStart();
 
+
         while (!isStopRequested()){
-            dt.movePIDFGyro(63, .8, 0, 0, .14);
+            dt.movePIDFGyro(63, .8, 0, 0, .13);
             dt.strafeGyro(.5, 20);
-            dt.turnHeading(15, .3, 0, 0, .14);
-            for (int i = 0; i < 4; i++){
+            dt.turnHeading(0, .000000000001, 0, 0, .11); //sometimes innacurate
+            for (int i = 0; i < 3; i++){
                 mtrShooter.setPower(1);
                 transfer.setPower(1);
                 ElapsedTime timer = new ElapsedTime();
                 timer.reset();
-                while (timer.seconds() < 2 && !isStopRequested()){
+                while (timer.milliseconds() < 1400 && !isStopRequested()){
                     //do nothing
                     telemetry.addLine("we chilling");
                     telemetry.update();
@@ -68,17 +69,36 @@ public class RedSingleWobble extends LinearOpMode {
                 sleep(300);
                 transferServo.setPosition(.45);
             }
-            sleep(300);
+            sleep(600);
             mtrShooter.setPower(0);
             transfer.setPower(0);
-
+            dt.turnHeading(0, .000000000001, 0, 0, .11); //sometimes innacurate
+//used to turn to 15 degrees
             switch (numRings){
                 case 0:
-                    dt.movePIDFGyro(20, .4, 0, 0, .14);
+                    dt.movePIDFGyro(17, .75, 0, 0, .14); //used to be 17
                     dt.turnHeading(90, .6, 0, 0, .14);
-                    dt.movePIDFGyro(-17, .3, 0, 0, .14);
+                    dt.movePIDFGyro(-15, .5, 0, .1, .14); //used to be -17
                     grabber.deployWobble();
-                    dt.movePIDFGyro(10, .3, 0, 0, .14);
+                    dt.movePIDFGyro(14.9, .5, 0, 0, .14);
+                    //2nd wobble
+                    dt.turnHeading(90, .000000000001, 0, 0, .14); //sometimes innacurate
+                    grabber.goToNeck();
+                    dt.strafePIDGyro(.65, 0.000001, .2, .14, -74.2);
+                    dt.turnHeading(90, .000000000001, 0, 0, .11); //sometimes innacurate
+                    sleep(500);
+                    //dt.movePIDFGyro(-12, .2, 0, .1, .14);
+                    //sleep(500);
+                    grabber.closeGrabber();
+                    sleep(500);
+                    grabber.liftUp();
+                    grabber.holdUp();
+                    dt.turnHeading(90, .000000000001, 0, 0, .14);
+                    dt.strafePIDGyro(.95, 0.000001, 0, .14, 69);
+                    dt.movePIDFGyro(-12, .6, 0, 0, .14);
+                    grabber.deployWobble();
+                    dt.movePIDFGyro(10, .5, 0, 0, .14);
+                    dt.strafePIDGyro(.8, 0, 0, .14, 15);
                     break;
                 case 1:
                     dt.turnHeading(180, .8, 0, 0, .14);
@@ -97,7 +117,6 @@ public class RedSingleWobble extends LinearOpMode {
                     dt.strafeGyro(.5, -50);
             }
             GlobalVars.finalHeading = dt.gyro.getAngle();
-            grabber.goToStart();
             break;
         }
         stop();
