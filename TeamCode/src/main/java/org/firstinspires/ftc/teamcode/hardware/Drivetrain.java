@@ -254,7 +254,11 @@ public class Drivetrain  {
 
         double integral = 0;
 
-        while (Math.abs(error) > .25 && !opMode.isStopRequested()) {
+        double timeAtSetPoint = 0;
+        double firstTimeAtSetPoint = 0;
+        boolean atSetpoint = false;
+
+        while (!opMode.isStopRequested() && timeAtSetPoint < .5) {
             error = gyro.newAngleDiff(gyro.getAngle(), finalAngle);
 
             currentTime = timer.milliseconds();
@@ -271,6 +275,20 @@ public class Drivetrain  {
             else{
                 startMotors(-power + f, power - f, -power + f, power - f);
             }
+
+            if (Math.abs(error) < .25){
+                if (!atSetpoint){
+                    atSetpoint = true;
+                    firstTimeAtSetPoint = currentTime;
+                }
+                else{
+                    timeAtSetPoint = currentTime - firstTimeAtSetPoint;
+                }
+            }
+            else{
+                atSetpoint = false;
+            }
+
             pastTime = currentTime;
             pastError = error;
         }

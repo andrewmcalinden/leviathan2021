@@ -43,13 +43,12 @@ public class RedSingleWobble extends LinearOpMode {
         telemetry.setAutoClear(false);
         ringCounter = new Vision(this);
 
-        int numRings = 1;
-//        while(!isStarted()){
-//            numRings = ringCounter.numRingsRightSide();
-//        }
+        int numRings = 0;
+        while(!isStarted()){
+            numRings = ringCounter.numRingsRightSide();
+        }
 
         waitForStart();
-//oops
 
         while (!isStopRequested()){
             dt.movePIDFGyro(63, .8, 0, 0, .13);
@@ -75,15 +74,15 @@ public class RedSingleWobble extends LinearOpMode {
             switch (numRings){
                 case 0:
                     dt.turnHeading(0, .000000000001, 0, 0, .11); //sometimes innacurate
-                    dt.movePIDFGyro(17, .75, 0, 0, .14); //used to be 17
+                    dt.movePIDFGyro(17.5, .75, 0, 0, .14);
                     dt.turnHeading(90, .6, 0, 0, .14);
-                    dt.movePIDFGyro(-15, .5, 0, .1, .14); //used to be -17
+                    dt.movePIDFGyro(-13, .5, 0, .1, .14);
                     grabber.deployWobble();
-                    dt.movePIDFGyro(14.9, .5, 0, 0, .14);
+                    dt.movePIDFGyro(14.6, .5, 0, 0, .14);
                     //2nd wobble
                     dt.turnHeading(90, .000000000001, 0, 0, .14); //sometimes innacurate
                     grabber.goToNeck();
-                    dt.strafePIDGyro(.65, 0.000001, .2, .14, -74.2);
+                    dt.strafePIDGyro(.65, 0.000001, .2, .14, -77);
                     dt.turnHeading(90, .000000000001, 0, 0, .11); //sometimes innacurate
                     sleep(500);
                     grabber.closeGrabber();
