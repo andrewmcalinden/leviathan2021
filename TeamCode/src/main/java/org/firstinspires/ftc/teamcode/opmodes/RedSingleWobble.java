@@ -25,6 +25,9 @@ public class RedSingleWobble extends LinearOpMode {
 
     public Vision ringCounter;
 
+    public DcMotor intake;
+
+
     @Override
     public void runOpMode() throws InterruptedException {
         dt = new Drivetrain(this);
@@ -43,9 +46,12 @@ public class RedSingleWobble extends LinearOpMode {
         telemetry.setAutoClear(false);
         ringCounter = new Vision(this);
 
-        int numRings = 0;
+        intake = hardwareMap.get(DcMotor.class, "intake");
+        intake.setDirection((DcMotor.Direction.REVERSE));
+
+        int numRings = 1;
         while(!isStarted()){
-            numRings = ringCounter.numRingsRightSide();
+            //numRings = ringCounter.numRingsRightSide();
         }
 
         waitForStart();
@@ -83,6 +89,7 @@ public class RedSingleWobble extends LinearOpMode {
                     dt.turnHeading(90, .000000000001, 0, 0, .14); //sometimes innacurate
                     grabber.goToNeck();
                     dt.strafePIDGyro(.65, 0.000001, .2, .14, -77);
+                    dt.movePIDFGyro(-2, .3, 0, 0, .14);
                     dt.turnHeading(90, .000000000001, 0, 0, .11); //sometimes innacurate
                     sleep(500);
                     grabber.closeGrabber();
@@ -92,34 +99,37 @@ public class RedSingleWobble extends LinearOpMode {
                     dt.turnHeading(90, .000000000001, 0, 0, .14);
                     dt.strafePIDGyro(.95, 0.000001, 0, .14, 69);
                     dt.movePIDFGyro(-12, .6, 0, 0, .14);
-                    grabber.deployWobble();
+                    grabber.goToPos(675, .8);
+                    grabber.openGrabber();
                     dt.movePIDFGyro(10, .5, 0, 0, .14);
                     dt.strafePIDGyro(.8, 0, 0, .14, 15);
                     break;
                 case 1:
-                    dt.turnHeading(180, .8, 0, 0, .14);
-                    dt.movePIDFGyro(-43, .9, 0, 0, .14);
+                    dt.turnHeading(175, .8, 0, 0, .14);
+                    dt.movePIDFGyro(-39, .9, 0, .8, .14);
                     grabber.deployWobble();
                     sleep(200);
                     grabber.goToStart();
                     dt.turnHeading(180, .000000000001, 0, 0, .14);
-                    dt.strafePIDGyro(.3, 0, 0, .14, 11.5);
-                    dt.movePIDFGyro(85.5, .8, 0, 0, .14);
+                    dt.strafePIDGyro(.8, 0, 0, .14, -10.5);
+                    dt.turnHeading(165, .2, 0, 0, .14);
+                    intake.setPower(1);
+                    dt.movePIDFGyro(89, .8, 0, 0, .14);
+                    intake.setPower(0);
                     //2nd wobble
                     dt.turnHeading(90, .8, 0, 0, .14);
                     grabber.goToNeck();
-                    dt.movePIDFGyro(-9.3, .2, 0, 0, .14);
-                    sleep(200);
-                    grabber.closeGrabber();
+                    dt.movePIDFGyro(-8.5, .35, 0, 0.3, .14);
                     sleep(500);
+                    grabber.closeGrabber();
+                    sleep(700);
                     grabber.liftUp();
                     grabber.holdUp();
-                    dt.movePIDFGyro(2, .8, 0, 0, .14);
-                    dt.turnHeading(180, .8, 0, 0, .14);
-                    dt.movePIDFGyro(-75, .8, 0, 0, .14);
-                    dt.strafePIDGyro(.3, 0, 0, .14, -8);
-                    grabber.deployWobble();
-                    dt.movePIDFGyro(5, .7, 0, 0, .14);
+                    dt.turnHeading(174.9, .8, 0, 0, .14);
+                    dt.movePIDFGyro(-75, .9, 0, .8, .14);
+                    grabber.goToPos(675, .8);
+                    grabber.openGrabber();
+                    dt.movePIDFGyro(5, 1, 0, .8, .14);
                     break;
                 default:
                     dt.turnHeading(0, .3, 0, 0, .14);

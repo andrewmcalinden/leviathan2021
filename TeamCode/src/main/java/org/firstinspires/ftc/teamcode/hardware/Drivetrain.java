@@ -310,7 +310,12 @@ public class Drivetrain  {
 
         double integral = 0;
 
-        while (Math.abs(error) > .5 && !opMode.isStopRequested()) {
+        double timeAtSetPoint = 0;
+        double firstTimeAtSetPoint = 0;
+        boolean atSetpoint = false;
+
+
+        while (timeAtSetPoint < .5 && !opMode.isStopRequested()) {
             if (inches < 0){
                 error = inches + getTic() / COUNTS_PER_INCH;
             }
@@ -365,6 +370,20 @@ public class Drivetrain  {
                     //opMode.telemetry.addLine("setting negative powers 3");
                 }
             }
+
+            if (Math.abs(error) < .25){
+                if (!atSetpoint){
+                    atSetpoint = true;
+                    firstTimeAtSetPoint = currentTime;
+                }
+                else{
+                    timeAtSetPoint = currentTime - firstTimeAtSetPoint;
+                }
+            }
+            else{
+                atSetpoint = false;
+            }
+
             pastTime = currentTime;
             pastError = error;
             //opMode.telemetry.update();

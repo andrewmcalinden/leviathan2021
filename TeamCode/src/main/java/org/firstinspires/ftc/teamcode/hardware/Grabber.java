@@ -94,7 +94,7 @@ public class Grabber {
         target += startPos;
         double error = target - arm.getCurrentPosition(); //-500
         double initialError = Math.abs(error); //500
-        while(Math.abs(error) > 5 && timer.milliseconds() < 1400){
+        while(Math.abs(error) > 5 && timer.milliseconds() < 900){
             error = target - arm.getCurrentPosition();
             double p = error / initialError; //will be positive if starting from initialization
             double f = p > 0 ? .07 : -.07;
@@ -108,19 +108,19 @@ public class Grabber {
     }
 
     public void holdUp(){
-        arm.setPower(-.2);
+        arm.setPower(-.18);
     }
 
     public void goToStart(){
-        goToPos(startPos, .47);
+        goToPos(startPos, 1);
     }
 
     public void goToNeck(){
-        goToPos(650, .47);
+        goToPos(650, .6);
     }
 
     public void deployWobble(){
-        goToPos(720, .47);
+        goToPos(720, .6);
         openGrabber();
     }
 
