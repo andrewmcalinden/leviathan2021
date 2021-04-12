@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.Drivetrain;
 import org.firstinspires.ftc.teamcode.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.GlobalVars;
 
-@Autonomous(name = "red double wobble", group = "18030")
+@Disabled()
 public class RedDoubleWobble extends LinearOpMode {
     private Drivetrain dt;
     private Grabber grabber;

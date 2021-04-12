@@ -74,51 +74,7 @@ public class Drivetrain  {
         opMode.idle();
     }
 
-    //maybe add pid later
-    public void strafeGyro(double power, double inches){
-        double initialAngle = gyro.getAngle();
-        resetEncoder();
-        if (inches > 0){ //strafe right
-            while (Math.abs(getTic() / COUNTS_PER_INCH) < inches && !opMode.isStopRequested()) {
-                double angleDiff = gyro.getAngle() - initialAngle;
-                if (angleDiff > 1){
-                    startMotors(power * 1.2, -power * 1.2, -power * .8, power * .8);
-                    opMode.telemetry.addData("turning left", gyro.getAngle());
-                }
-                else if (angleDiff < -1){
-                    startMotors(power * .8, -power * .8, -power * 1.2, power * 1.2);
-                    opMode.telemetry.addData("turning right", gyro.getAngle());
-                }
-                else{
-                    startMotors(power, -power, -power, power);
-                }
-
-                opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
-                opMode.telemetry.update();
-            }
-        }
-        else{ //strafe left
-            while (Math.abs(getTic() / COUNTS_PER_INCH) < Math.abs(inches) && !opMode.isStopRequested()) {
-                double angleDiff = gyro.getAngle() - initialAngle;
-                if (angleDiff < -1){
-                    startMotors(-power * 1.2, power * 1.2, power * .8, -power * .8);
-                    opMode.telemetry.addData("turning left", gyro.getAngle());
-                }
-                else if (angleDiff > 1){
-                    startMotors(-power * .8, power * .8, power * 1.2, -power * 1.2);
-                    opMode.telemetry.addData("turning right", gyro.getAngle());
-                }
-                else{
-                    startMotors(-power, power, power, -power);
-                }
-                opMode.telemetry.addData("position", getTic() / COUNTS_PER_INCH);
-                opMode.telemetry.update();
-            }
-        }
-        stopMotors();
-    }
-
-    public void strafePIDGyro(double kp, double ki, double kd, double f, double inches){
+    public void strafePIDGyro(double kp, double ki, double kd, double f, double inches, double threshold){
         timer.reset();
         resetEncoder();
 
@@ -133,7 +89,11 @@ public class Drivetrain  {
 
         double integral = 0;
 
-        while (Math.abs(error) > .5 && !opMode.isStopRequested()) {
+        double timeAtSetPoint = 0;
+        double firstTimeAtSetPoint = 0;
+        boolean atSetpoint = false;
+
+        while (timeAtSetPoint < .5 && !opMode.isStopRequested()) {
             if (inches < 0){
                 error = inches + getTic() / COUNTS_PER_INCH;
             }
@@ -178,9 +138,22 @@ public class Drivetrain  {
                     startMotors(power - f, -power + f, -power + f, power - f);
                 }
             }
+
+            if (Math.abs(error) < threshold){
+                if (!atSetpoint){
+                    atSetpoint = true;
+                    firstTimeAtSetPoint = currentTime;
+                }
+                else{
+                    timeAtSetPoint = currentTime - firstTimeAtSetPoint;
+                }
+            }
+            else{
+                atSetpoint = false;
+            }
+
             pastTime = currentTime;
             pastError = error;
-            //opMode.telemetry.update();
         }
         stopMotors();
     }
@@ -239,7 +212,7 @@ public class Drivetrain  {
         return correctAngle;
     }
 
-    public void turnHeading(double finalAngle, double kp, double ki, double kd, double f) {
+    public void turnHeading(double finalAngle, double kp, double ki, double kd, double f, double threshold) {
         timer.reset();
 
         double pastTime = 0;
@@ -276,7 +249,7 @@ public class Drivetrain  {
                 startMotors(-power + f, power - f, -power + f, power - f);
             }
 
-            if (Math.abs(error) < .25){
+            if (Math.abs(error) < threshold){
                 if (!atSetpoint){
                     atSetpoint = true;
                     firstTimeAtSetPoint = currentTime;
@@ -295,7 +268,7 @@ public class Drivetrain  {
         stopMotors();
     }
 
-    public void movePIDFGyro(double inches, double kp, double ki, double kd, double f){
+    public void movePIDFGyro(double inches, double kp, double ki, double kd, double f, double threshold){
         timer.reset();
         resetEncoder();
 
@@ -339,39 +312,29 @@ public class Drivetrain  {
             if (difference > 1){
                 if (power > 0) {
                     startMotors((power + f) * .8, 1.2 * (power + f), (power + f) * .8, 1.2 * (power + f));
-                    //opMode.telemetry.addLine("setting positive powers");
-
                 }
                 else {
                     startMotors((1.2 * (power - f)), (power - f) * .8, 1.2 * ((power - f)), (power - f) * .8);
-                    //opMode.telemetry.addLine("setting negative powers 1");
                 }
             }
             else if(difference < -1){
                 if (power > 0) {
                     startMotors(1.2 * (power + f), (power + f) * .8, 1.2 * (power + f), (power + f) * .8);
-                    //opMode.telemetry.addLine("setting positive powers");
-
                 }
                 else {
                     startMotors((power - f) * .8, (1.2 * (power - f)), (power - f) * .8, (1.2 * (power - f)));
-                    //opMode.telemetry.addLine("setting negative powers 2");
-
                 }
             }
             else{
                 if (power > 0) {
                     startMotors(power + f, power + f, power + f, power + f);
-                    //opMode.telemetry.addLine("setting positive powers");
-
                 }
                 else {
                     startMotors(power - f, power - f, power - f, power - f);
-                    //opMode.telemetry.addLine("setting negative powers 3");
                 }
             }
 
-            if (Math.abs(error) < .25){
+            if (Math.abs(error) < threshold){
                 if (!atSetpoint){
                     atSetpoint = true;
                     firstTimeAtSetPoint = currentTime;
@@ -386,7 +349,6 @@ public class Drivetrain  {
 
             pastTime = currentTime;
             pastError = error;
-            //opMode.telemetry.update();
         }
         stopMotors();
     }
