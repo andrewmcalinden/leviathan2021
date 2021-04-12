@@ -74,7 +74,7 @@ public class Drivetrain  {
         opMode.idle();
     }
 
-    public void strafePIDGyro(double kp, double ki, double kd, double f, double inches, double threshold){
+    public void strafePIDGyro(double kp, double ki, double kd, double f, double inches, double threshold, double time){
         timer.reset();
         resetEncoder();
 
@@ -93,7 +93,7 @@ public class Drivetrain  {
         double firstTimeAtSetPoint = 0;
         boolean atSetpoint = false;
 
-        while (timeAtSetPoint < .5 && !opMode.isStopRequested()) {
+        while (timeAtSetPoint < time && !opMode.isStopRequested()) {
             if (inches < 0){
                 error = inches + getTic() / COUNTS_PER_INCH;
             }
@@ -111,7 +111,7 @@ public class Drivetrain  {
             double power = kp * proportional + ki * integral + kd * derivative;
             double difference = gyro.angleDiff(initialHeading);
 
-            if (difference > 1){
+            if (difference > .5){
                 if (power > 0) {
                     startMotors(.8 * (power + f), .8 * (-power - f), 1.2 * (-power - f), 1.2 * (power + f));
 
@@ -120,7 +120,7 @@ public class Drivetrain  {
                     startMotors(1.2 * (power - f), 1.2 * (-power + f), .8 * (-power + f), .8 * (power - f));
                 }
             }
-            else if(difference < -1){
+            else if(difference < -.5){
                 if (power > 0) {
                     startMotors(1.2 * (power + f), 1.2 * (-power - f), .8 * (-power - f), .8 * (power + f));
 
@@ -212,7 +212,7 @@ public class Drivetrain  {
         return correctAngle;
     }
 
-    public void turnHeading(double finalAngle, double kp, double ki, double kd, double f, double threshold) {
+    public void turnHeading(double finalAngle, double kp, double ki, double kd, double f, double threshold, double time) {
         timer.reset();
 
         double pastTime = 0;
@@ -231,7 +231,7 @@ public class Drivetrain  {
         double firstTimeAtSetPoint = 0;
         boolean atSetpoint = false;
 
-        while (!opMode.isStopRequested() && timeAtSetPoint < .5) {
+        while (!opMode.isStopRequested() && timeAtSetPoint < time) {
             error = gyro.newAngleDiff(gyro.getAngle(), finalAngle);
 
             currentTime = timer.milliseconds();
@@ -268,7 +268,7 @@ public class Drivetrain  {
         stopMotors();
     }
 
-    public void movePIDFGyro(double inches, double kp, double ki, double kd, double f, double threshold){
+    public void movePIDFGyro(double inches, double kp, double ki, double kd, double f, double threshold, double time){
         timer.reset();
         resetEncoder();
 
@@ -288,7 +288,7 @@ public class Drivetrain  {
         boolean atSetpoint = false;
 
 
-        while (timeAtSetPoint < .5 && !opMode.isStopRequested()) {
+        while (timeAtSetPoint < time && !opMode.isStopRequested()) {
             if (inches < 0){
                 error = inches + getTic() / COUNTS_PER_INCH;
             }
@@ -309,7 +309,7 @@ public class Drivetrain  {
             opMode.telemetry.update();
             double difference = gyro.angleDiff(initialHeading);
 
-            if (difference > 1){
+            if (difference > .4){
                 if (power > 0) {
                     startMotors((power + f) * .8, 1.2 * (power + f), (power + f) * .8, 1.2 * (power + f));
                 }
@@ -317,7 +317,7 @@ public class Drivetrain  {
                     startMotors((1.2 * (power - f)), (power - f) * .8, 1.2 * ((power - f)), (power - f) * .8);
                 }
             }
-            else if(difference < -1){
+            else if(difference < -.5){
                 if (power > 0) {
                     startMotors(1.2 * (power + f), (power + f) * .8, 1.2 * (power + f), (power + f) * .8);
                 }
