@@ -85,6 +85,8 @@ public class Grabber {
             myOpmode.telemetry.addLine("button pressed");
             myOpmode.telemetry.update();
         }
+        //myOpmode.telemetry.addData("pos", arm.getCurrentPosition());
+        //myOpmode.telemetry.update();
         lastButtonPressed = buttonPressed;
     }
 
@@ -104,7 +106,7 @@ public class Grabber {
     }
 
     public void liftUp(){
-        goToPos(375, 1);
+        goToPos(390, 1);
     }
 
     public void holdUp(){
@@ -116,11 +118,11 @@ public class Grabber {
     }
 
     public void goToNeck(){
-        goToPos(650, .6);
+        goToPos(775, .6);
     }
 
     public void deployWobble(){
-        goToPos(720, .6);
+        goToPos(715, .6);
         openGrabber();
     }
 

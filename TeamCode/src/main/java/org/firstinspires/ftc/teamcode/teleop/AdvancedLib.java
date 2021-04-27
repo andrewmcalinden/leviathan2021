@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.GlobalVars;
 import org.firstinspires.ftc.teamcode.hardware.Grabber;
 import org.firstinspires.ftc.teamcode.hardware.Sensors;
 import org.firstinspires.ftc.teamcode.math.Vector;
@@ -28,7 +27,8 @@ public abstract class AdvancedLib extends OpMode {
 
     public Servo transferServo;
 
-    public boolean pressedLastTime;
+    public boolean pressedALastTime;
+    public boolean pressedBLastTime;
     public double mtrPower;
 
     public double servoPos;
@@ -62,7 +62,8 @@ public abstract class AdvancedLib extends OpMode {
         transfer = hardwareMap.get(DcMotor.class, "transfer");
         transferServo = hardwareMap.get(Servo.class, "transferServo");
 
-        pressedLastTime = false;
+        pressedALastTime = false;
+        pressedBLastTime = false;
         mtrPower = 0;
 
         transferServo.setPosition(.45);
@@ -223,7 +224,7 @@ public abstract class AdvancedLib extends OpMode {
     }
 
     public void updateShooter(){
-        if (gamepad2.a && !pressedLastTime){
+        if (gamepad2.a && !pressedALastTime){
             if (mtrPower == 0){
                 mtrPower = 1;
             }
@@ -231,9 +232,20 @@ public abstract class AdvancedLib extends OpMode {
                 mtrPower = 0;
             }
             mtrShooter.setPower(mtrPower);
-            transfer.setPower(mtrPower);
+            transfer.setPower(mtrPower == 0 ? 0 : 1);
         }
-        pressedLastTime = gamepad2.a;
+        else if (gamepad2.b && !pressedBLastTime){
+            if (mtrPower == 0){
+                mtrPower = .2;
+            }
+            else{
+                mtrPower = 0;
+            }
+            mtrShooter.setPower(mtrPower);
+            transfer.setPower(mtrPower == 0 ? 0 : 1);
+        }
+        pressedALastTime = gamepad2.a;
+        pressedBLastTime = gamepad2.b;
     }
 
     public void updateShooterShaan(){

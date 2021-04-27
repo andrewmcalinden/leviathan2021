@@ -243,9 +243,15 @@ public class Drivetrain  {
 
             double power = kp * proportional + ki * integral + kd * derivative;
             if (power > 0) {
+                if (Math.abs(kp) < .0001){
+                    power = 0 * proportional + ki * integral + kd * derivative;
+                }
                 startMotors(-power - f, power + f, -power - f, power + f);
             }
             else{
+                if (Math.abs(kp) < .0001){
+                    power = 0 * proportional + ki * integral + kd * derivative;
+                }
                 startMotors(-power + f, power - f, -power + f, power - f);
             }
 
