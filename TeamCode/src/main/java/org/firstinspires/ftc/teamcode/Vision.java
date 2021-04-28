@@ -94,7 +94,7 @@ public class Vision {
         }
         topNum.setValue(numYellow);
         opMode.telemetry.update();
-        return (numYellow > 15);
+        return (numYellow > 0);
     }
 
     //checks 1 row if pixels that should be in the area where the top ring is
@@ -148,7 +148,7 @@ public class Vision {
         }
         bottomNum.setValue(numYellow);
         opMode.telemetry.update();
-        return (numYellow > 12);
+        return (numYellow > 0);
     }
 
     public int numRingsLeftSide() throws InterruptedException {

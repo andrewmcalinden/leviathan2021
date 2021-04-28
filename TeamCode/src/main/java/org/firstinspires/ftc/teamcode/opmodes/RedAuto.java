@@ -56,7 +56,6 @@ public class RedAuto extends LinearOpMode {
         waitForStart();
 
         dt.movePIDFGyro(63, .8, 0, 0, .13, .25, .5);
-        dt.turnHeading(5, .02, 0, 0, .13, .25, .25);
         for (int i = 0; i < 3; i++){
             mtrShooter.setPower(.3);
             transfer.setPower(1);
@@ -74,9 +73,6 @@ public class RedAuto extends LinearOpMode {
         sleep(600);
         mtrShooter.setPower(0);
         transfer.setPower(0);
-
-        dt.turnHeading(0, .000000000001, 0, 0, .14, .25, .5); //sometimes innacurate
-
 
         dt.strafePIDGyro(.5, 0, 0, .14, 20, 1, .1);
         switch (numRings){
