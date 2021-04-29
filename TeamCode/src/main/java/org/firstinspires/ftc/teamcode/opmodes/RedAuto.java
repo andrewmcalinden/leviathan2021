@@ -49,35 +49,34 @@ public class RedAuto extends LinearOpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection((DcMotor.Direction.REVERSE));
 
-        int numRings = 1;
+        int numRings = 4;
         while(!isStarted()){
-            numRings = ringCounter.numRingsRightSide();
+            //numRings = ringCounter.numRingsRightSide();
         }
         waitForStart();
 
-        dt.movePIDFGyro(63, .8, 0, 0, .13, .25, .5);
+        dt.movePIDFGyro(63, .9, 0, 0, .13, .25, .5);
         for (int i = 0; i < 3; i++){
             mtrShooter.setPower(.3);
             transfer.setPower(1);
             ElapsedTime timer = new ElapsedTime();
             timer.reset();
-            while (timer.milliseconds() < 1400 && !isStopRequested()){
+            while (timer.milliseconds() < 800 && !isStopRequested()){
                 //do nothing
                 telemetry.addLine("we chilling");
                 telemetry.update();
             }
             transferServo.setPosition(0);
-            sleep(1000);
+            sleep(300);
             transferServo.setPosition(.45);
         }
-        sleep(600);
+        sleep(870);
         mtrShooter.setPower(0);
         transfer.setPower(0);
 
-        dt.strafePIDGyro(.5, 0, 0, .14, 20, 1, .1);
+        dt.strafePIDGyro(.7, 0, 0, .14, 20, 1, .1);
         switch (numRings){
             case 0:
-                dt.turnHeading(0, .000000000001, 0, 0, .14, .25, .5); //sometimes innacurate
                 dt.movePIDFGyro(17.5, .75, 0, 0, .14, .25, .5);
                 dt.turnHeading(90, .6, 0, 0, .14, .25, .5);
                 dt.movePIDFGyro(-15, .67, 0, .1, .14, .25, .5);
@@ -105,21 +104,21 @@ public class RedAuto extends LinearOpMode {
                 GlobalVars.finalHeading = dt.gyro.getAngle();
                 break;
             case 1:
-                dt.turnHeading(175, .8, 0, 0, .14, .25, .5);
+                dt.turnHeading(175, .8, 0, 0, .14, .5, .3);
                 dt.movePIDFGyro(-35, .9, 0, .8, .14, .25, .5);
                 grabber.deployWobble();
                 sleep(200);
                 grabber.goToStart();
-                dt.turnHeading(180, .000000000001, 0, 0, .14, .25, .35);
+                //dt.turnHeading(180, .16, 0, 0, .14, .25, .35);
                 dt.strafePIDGyro(.8, 0, 0, .14, -10.5, .5, .5);
-                dt.turnHeading(170, .16, 0, 0, .14, .25, .5);
+                dt.turnHeading(167.5, .16, 0, 0, .14, .25, .5);
                 intake.setPower(1);
-                dt.movePIDFGyro(86.5, .8, 0, 0, .14, .25, .5);
+                dt.movePIDFGyro(87.4, .8, 0, 0, .14, .25, .5);
                 intake.setPower(0);
                 //2nd wobble
                 dt.turnHeading(90, .8, 0, 0, .14, .25, .5);
                 grabber.goToNeck();
-                dt.movePIDFGyro(-4, .35, 0, 0.3, .14, .25, .5);
+                dt.movePIDFGyro(-6.5, .3, 0, 0.25, .14, .25, .5);
                 sleep(500);
                 grabber.closeGrabber();
                 sleep(700);
@@ -129,18 +128,19 @@ public class RedAuto extends LinearOpMode {
                 dt.movePIDFGyro(-75, .9, 0, .8, .14, .25, .5);
                 grabber.goToPos(675, .8);
                 grabber.openGrabber();
+                sleep(300);
                 dt.movePIDFGyro(5, 1, 0, .8, .14, 1, .001);
                 GlobalVars.finalHeading = dt.gyro.getAngle();
                 break;
             default:
-                dt.turnHeading(0, .000000000000001, 0, 0, .14, .25, .5);
-                dt.movePIDFGyro(67, .6, 0, 0, .14, .25, .5);
-                dt.turnHeading(90, .6, 0, 0, .14, .25, .5);
-                dt.movePIDFGyro(-13, .3, 0, 0, .14, .25, .5);
+                dt.movePIDFGyro(67, .9, 0, 0, .14, .25, .5);
+                dt.turnHeading(90, .69, 0, 0, .14, .25, .5);
+                dt.movePIDFGyro(-13, .69, 0, 0, .14, .25, .5);
+                dt.turnHeading(90, .000001, 0, 0, .14, .25, .5);
                 grabber.deployWobble();
-                sleep(500);
-                dt.movePIDFGyro(10, .4, 0, 0, .14, .25, .5);
-                dt.strafePIDGyro(.8, 0, 0, .12, -55, .5, .25);
+                sleep(300);
+                dt.movePIDFGyro(25, .69, 0, 0, .14, .25, .5);
+                dt.strafePIDGyro(8, 0.000001, .2, .14, -130, .5, .25);
                 GlobalVars.finalHeading = dt.gyro.getAngle() + 90;
         }
         stop();
