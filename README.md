@@ -1,5 +1,7 @@
 Software Innovations: https://www.youtube.com/watch?v=9LdUHlWKRvU
 
+Most of the interesting code can be found in TeamCode/src/main/java/org/firstinspires/ftc/teamcode/hardware
+
 ## NOTICE
 
 This repository contains the public FTC SDK for the Ultimate Goal (2020-2021) competition season.
